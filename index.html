@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đấu Trường Trí Tuệ - CLB Taekwondo Hà Kiệt</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,500;0,700;0,900;1,500&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        body { font-family: 'Montserrat', sans-serif; background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 15px; box-sizing: border-box; overflow-x: hidden;}
+        .game-board { background: white; max-width: 500px; width: 100%; padding: 25px 20px; border-radius: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); border: 5px solid #fff; text-align: center; box-sizing: border-box; position: relative; z-index: 10;}
+        .logo-clb { width: 110px; height: 110px; object-fit: contain; margin-bottom: 15px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1)); border-radius: 50%; border: 3px solid #1e90ff;}
+        .loi-chao { color: #2f3542; font-size: 14px; font-weight: 700; margin: 0 0 5px 0; text-transform: uppercase;}
+        .ten-clb { color: #1e90ff; font-size: 22px; font-weight: 900; margin: 0 0 15px 0; text-transform: uppercase; letter-spacing: 1px;}
+        .tieu-de-game { color: #ff4757; font-size: 20px; font-weight: 900; margin: 0 0 10px 0; }
+        .mo-ta { color: #576574; font-size: 14px; margin-bottom: 20px; font-style: italic; font-weight: 500;}
+        #thong-bao-tai { color: #ff9f43; font-weight: 700; font-size: 16px; animation: pulse 1s infinite alternate; }
+        @keyframes pulse { from { opacity: 0.6; } to { opacity: 1; } }
+
+        #ma-bao-mat, #ten-vo-sinh { padding: 15px; font-size: 18px; text-align: center; border-radius: 12px; border: 3px solid #ced6e0; outline: none; font-weight: 700; color: #2f3542; transition: 0.3s; font-family: 'Montserrat', sans-serif; box-sizing: border-box;}
+        #ma-bao-mat { width: 100%; margin-bottom: 10px; } 
+        #ten-vo-sinh { width: 100%; margin-bottom: 15px; border-color: #1e90ff;}
+        #ma-bao-mat:focus, #ten-vo-sinh:focus { border-color: #1e90ff; box-shadow: 0 0 10px rgba(30, 144, 255, 0.2); }
+
+        .btn-ok { padding: 15px 20px; font-size: 16px; background: #1e90ff; color: white; border: none; border-radius: 12px; cursor: pointer; font-weight: 700; box-shadow: 0 4px 0 #0984e3; transition: 0.2s; font-family: 'Montserrat', sans-serif; text-transform: uppercase; white-space: nowrap;}
+        .btn-ok:active { transform: translateY(4px); box-shadow: 0 0 0 #0984e3; }
+        .btn-ok:hover { background: #74b9ff; }
+        
+        #man-hinh-chon-che-do h2 { color: #1e90ff; font-size: 24px; font-weight: 900; margin-bottom: 5px;}
+        .btn-che-do { width: 100%; margin-bottom: 15px; padding: 20px 10px; font-size: 18px; border-radius: 15px; display: flex; flex-direction: column; align-items: center; line-height: 1.4;}
+        .btn-che-do span { font-size: 13px; font-weight: 500; text-transform: none; margin-top: 5px; opacity: 0.9;}
+
+        .luoi-the-bai { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 20px; margin-bottom: 25px;}
+        .the-bai { background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%); color: white; font-size: 28px; font-weight: 900; height: 100px; display: flex; justify-content: center; align-items: center; border-radius: 15px; cursor: pointer; box-shadow: 0 6px 0 #1b52b8, 0 10px 15px rgba(0,0,0,0.2); transition: all 0.2s; border: 2px solid rgba(255,255,255,0.3);}
+        .the-bai:active { transform: translateY(6px); box-shadow: 0 0 0 #1b52b8, 0 2px 5px rgba(0,0,0,0.2); }
+        .the-bai:hover { filter: brightness(1.1); transform: scale(1.05); }
+
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        #diem { color: #2ed573; font-size: 20px; font-weight: 900; }
+        #so-mang-thi { font-size: 14px; letter-spacing: 2px; }
+        #cau-dang-chon { color: #ff9f43; font-size: 14px; font-weight: 700; background: #fff3cd; padding: 5px 12px; border-radius: 15px; }
+        #khu-vuc-dong-ho-thi { color: #ff4757; font-size: 20px; font-weight: 900; background: #ffeaa7; padding: 5px 15px; border-radius: 15px; border: 2px solid #fdcb6e; }
+
+        .track { width: 100%; height: 35px; background-color: #8B4513; border-radius: 20px; position: relative; margin-bottom: 25px; box-shadow: inset 0 5px 10px rgba(0,0,0,0.4); }
+        .track::after { content: '🍌'; position: absolute; right: 2px; top: -2px; font-size: 30px; }
+        #monkey { position: absolute; left: 0%; top: -6px; font-size: 35px; transition: left 1s linear; z-index: 10; } 
+        
+        .question-box { background: #f1f2f6; padding: 15px; border-radius: 15px; font-size: 16px; color: #2f3542; margin-bottom: 20px; min-height: 80px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; border: 3px dashed #ced6e0; font-weight: 700; line-height: 1.5;}
+        .question-img { max-width: 100%; max-height: 160px; border-radius: 10px; margin-bottom: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        
+        .options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .ans-btn { background: #1e90ff; color: white; border: none; padding: 12px 10px; font-size: 14px; border-radius: 12px; cursor: pointer; transition: 0.1s; box-shadow: 0 5px 0 #0984e3; font-family: inherit; font-weight: 700; line-height: 1.4;}
+        .ans-btn:active { transform: translateY(5px); box-shadow: 0 0 0 #0984e3; }
+        .ans-btn:hover { background: #74b9ff; }
+        
+        .btn-full { grid-column: span 2; background: #ff4757; box-shadow: 0 5px 0 #c0392b; color: white; border: none; padding: 15px; font-size: 15px; border-radius: 12px; cursor: pointer; font-weight: 700; font-family: inherit; text-transform: uppercase;}
+        .btn-full:hover { background: #ff6b81; }
+        .btn-full:active { transform: translateY(5px); box-shadow: 0 0 0 #c0392b; }
+
+        .btn-bo-qua { grid-column: span 2; background: #a4b0be; box-shadow: 0 5px 0 #747d8c; color: white; border: none; padding: 15px; font-size: 15px; border-radius: 12px; cursor: pointer; font-weight: 700; font-family: inherit; text-transform: uppercase; transition: 0.2s;}
+        .btn-bo-qua:active { transform: translateY(5px); box-shadow: 0 0 0 #747d8c; }
+        .btn-bo-qua:hover { background: #b2bec3; }
+
+        .btn-luu { background: #2ed573; box-shadow: 0 4px 0 #27ae60; margin-top: 10px; width: 100%; }
+        .btn-luu:hover { background: #26de81; }
+        .btn-luu:active { transform: translateY(4px); box-shadow: 0 0 0 #27ae60; }
+
+        .luoi-the-phat { display: flex; justify-content: center; gap: 15px; margin-top: 15px; margin-bottom: 10px;}
+        .the-phat { background: #ff6b81; color: white; width: 70px; height: 90px; display: flex; justify-content: center; align-items: center; border-radius: 10px; font-size: 30px; font-weight: bold; cursor: pointer; box-shadow: 0 5px 0 #c0392b; transition: 0.2s; border: 2px dashed #fff;}
+        .the-phat:active { transform: translateY(5px); box-shadow: 0 0 0 #c0392b; }
+        .the-phat:hover { filter: brightness(1.1); transform: scale(1.05); }
+
+        .btn-am-thanh { position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 24px; cursor: pointer; opacity: 0.7; transition: 0.3s; z-index: 20; }
+        .btn-am-thanh:hover { opacity: 1; transform: scale(1.1);}
+
+        /* CSS BẢNG VINH DANH */
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); display: flex; justify-content: center; align-items: center; z-index: 100; opacity: 0; pointer-events: none; transition: 0.3s;}
+        .modal-overlay.show { opacity: 1; pointer-events: auto; }
+        .modal-content { background: white; padding: 25px 20px; border-radius: 20px; width: 90%; max-width: 400px; position: relative; text-align: center; border: 5px solid #feca57; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transform: translateY(-50px); transition: 0.3s;}
+        .modal-overlay.show .modal-content { transform: translateY(0); }
+        .close-btn { position: absolute; top: 5px; right: 15px; background: none; border: none; font-size: 28px; cursor: pointer; color: #ff4757; font-weight: bold; padding: 0;}
+        .top-item { display: flex; justify-content: space-between; padding: 12px 10px; border-bottom: 1px dashed #dfe4ea; font-weight: 700; font-size: 16px; color: #2f3542;}
+        .top-1 { color: #ff9f43; font-size: 20px; background: #fff3cd; border-radius: 10px;}
+        .top-2 { color: #747d8c; font-size: 18px; background: #f1f2f6; border-radius: 10px;}
+        .top-3 { color: #cd6133; font-size: 18px; background: #ffebd3; border-radius: 10px;}
+        .rank-icon { display: inline-block; width: 30px; text-align: left; }
+    </style>
+</head>
+<body>
+
+<div id="modal-bxh" class="modal-overlay">
+    <div class="modal-content">
+        <button class="close-btn" onclick="dongBangXepHang()">&times;</button>
+        <h2 style="color: #ff9f43; margin-top: 0; font-size: 24px; text-transform: uppercase;">🏆 BẢNG VINH DANH 🏆</h2>
+        <p style="font-size: 13px; color: #747d8c; font-style: italic; margin-top:-10px;">Chỉ vinh danh Cao thủ chế độ Thi Đấu</p>
+        <div id="noi-dung-bxh" style="max-height: 60vh; overflow-y: auto;"></div>
+    </div>
+</div>
+
+<div class="game-board" id="man-hinh-chao-khoa">
+    <button class="btn-am-thanh" onclick="chuyenDoiAmThanh()" id="icon-am-thanh0">🔊</button>
+    <img src="Logo.jpg" alt="Logo CLB" class="logo-clb">
+    <p class="loi-chao">Chào mừng bạn đến với</p>
+    <h1 class="ten-clb">CLB TAEKWONDO HÀ KIỆT</h1>
+    
+    <div style="background: #f1f2f6; padding: 15px; border-radius: 15px; margin-bottom: 20px; border: 2px dashed #ced6e0;">
+        <h2 class="tieu-de-game">⚔️ ĐẤU TRƯỜNG TRÍ TUỆ ⚔️</h2>
+        <p class="mo-ta" style="margin-bottom: 0;">Hệ thống ôn luyện kiến thức & phản xạ võ thuật</p>
+    </div>
+    
+    <p id="thong-bao-tai">⏳ Đang khởi động hệ thống...</p>
+    
+    <div id="khu-vuc-nhap-ma" style="display: none; padding: 0 10px;">
+        <input type="text" id="ten-vo-sinh" placeholder="Tên hoặc Biệt danh của em...">
+        <input type="password" id="ma-bao-mat" placeholder="Mã Câu Lạc Bộ..." onkeypress="if(event.key === 'Enter') kiemTraMa()">
+        <button class="btn-ok" onclick="kiemTraMa()" style="width: 100%; margin-bottom: 10px;">MỞ CỔNG VÀO NGAY</button>
+        <button class="btn-ok" onclick="moBangXepHang()" style="width: 100%; background: #feca57; color: #2f3542; box-shadow: 0 4px 0 #e1b12c;">🏆 XEM BẢNG VINH DANH</button>
+        <p id="sai-ma" style="color: #ff4757; display: none; font-weight: 900; margin-top: 10px;">❌ Mã bảo mật không chính xác!</p>
+    </div>
+</div>
+
+<div class="game-board" id="man-hinh-chon-che-do" style="display: none;">
+    <button class="btn-am-thanh" onclick="chuyenDoiAmThanh()" id="icon-am-thanh1">🔊</button>
+    <h2>🎯 CHỌN CHẾ ĐỘ CHƠI</h2>
+    <div id="ten-hien-thi-che-do" style="font-size: 16px; color: #1e90ff; font-weight: 700; margin-bottom: 25px;">Võ sinh: Khách</div>
+    
+    <button class="btn-ok btn-che-do" onclick="chonCheDo('Luyện Tập')">
+        🥋 CHẾ ĐỘ LUYỆN TẬP
+        <span>(Thư giãn - Không giới hạn thời gian - Có Thẻ Phạt)</span>
+    </button>
+    
+    <button class="btn-ok btn-che-do" style="background: #ff4757; box-shadow: 0 4px 0 #c0392b;" onclick="chonCheDo('Thi Đấu')">
+        ⏱ CHẾ ĐỘ THI ĐẤU
+        <span>(Giới hạn 2 phút - Bấm sai 5 lần là OUT - Chuyển siêu tốc)</span>
+    </button>
+</div>
+
+<div class="game-board" id="man-hinh-chon-the" style="display: none;">
+    <button class="btn-am-thanh" onclick="chuyenDoiAmThanh()" id="icon-am-thanh2">🔊</button>
+    <h2>🃏 Lật Thẻ Bí Ẩn</h2>
+    <div id="diem-tong" style="font-size: 20px; color: #2ed573; font-weight: 900; margin-bottom: 5px;">⭐ Tổng Điểm: 0</div>
+    <div id="ten-hien-thi-luyen-tap" style="font-size: 16px; color: #1e90ff; font-weight: 700; margin-bottom: 10px;">Võ sinh: Khách</div>
+    <p style="font-size: 15px; color: #2f3542; font-weight: 500;">Hãy lật một thẻ bài để nhận thử thách!</p>
+    
+    <div class="luoi-the-bai" id="khu-vuc-the-bai"></div>
+    
+    <button class="btn-ok btn-luu" id="btn-luu-diem-luyen-tap" onclick="luuLichSu()" style="display: none;">💾 KẾT THÚC & LƯU THÀNH TÍCH</button>
+</div>
+
+<div class="game-board" id="man-hinh-game" style="display: none;">
+    <button class="btn-am-thanh" onclick="chuyenDoiAmThanh()" id="icon-am-thanh3">🔊</button>
+    
+    <div id="khu-vuc-combo" style="display:none; color: #ff4757; font-weight: 900; font-size: 16px; margin-bottom: 10px; animation: pulse 0.5s infinite alternate; text-transform: uppercase;">🔥 Đang vào phom x3!</div>
+
+    <div class="header">
+        <div id="diem-chi-tiet">⭐ Điểm: 0</div>
+        <div id="so-mang-thi" style="display:none;">❤️❤️❤️❤️❤️</div>
+        <div id="cau-dang-chon" style="display:none;">Câu số: X</div> 
+        <div id="khu-vuc-dong-ho-thi" style="display:none;">⏱ 02:00</div> 
+    </div>
+
+    <div class="track" id="khu-vuc-khi">
+        <div id="monkey">🐒</div>
+    </div>
+
+    <div class="question-box" id="cau-hoi">Đang chuẩn bị...</div>
+    <div class="options" id="dap-an"></div>
+</div>
+
+<script>
+    // ==========================================
+    const API_URL = 'https://script.google.com/macros/s/AKfycbypOubFpYaRNAmZwhVs_0cxhgre-Rpz9Oxm4V_6-w5mTXKdDL9-je16cGumTXc4r9hYtw/exec'; 
+    const MAT_KHAU_CLB = "HAKIETHKC";
+    // ==========================================
+
+    let tenNguoiDung = ""; let cheDoHienTai = ""; let amThanhBat = true; let chuoiThang = 0; 
+    const danhSachHinhPhat = [
+        "💪 Hít đất 10 cái", "🍀 MAY MẮN: ôm từng người và nói cảm ơn", "🐸 Bật cóc 1 vòng", 
+        "🏋️ Thụt dầu 20 cái", "🍀 MAY MẮN: ngồi vỗ tay và nói cảm ơn", "🦵 Trung bình tấn 1 phút", 
+        "🏃 Chạy 2 vòng sân", "🤸 Plank 1 phút", "🍀 MAY MẮN: đi bắt tay và nói cảm ơn",  
+        "🤸 Plank 2 phút", "🌪️ Đá móc ngược mỗi chân 20 cái/chân", "🥋 Ép dẻo ngang 1 phút", 
+        "👊 Đấm thẳng 50 cái/tay", "🌪️ Đá vòng cầu mỗi chân 50 cái/chân", "🌪️ Đá vòng cầu mỗi chân 20 cái/chân", 
+        "🌪️ Đá chẻ mỗi chân 20 cái/chân", "🌪️ Đá chẻ mỗi chân 50 cái/chân", "🌪️ Đá ngang mỗi chân 20 cái/chân", 
+        "🌪️ Đá ngang mỗi chân 50 cái/chân", "🌪️ Đá bande mỗi chân 20 cái/chân", "🌪️ Đá số 4 mỗi chân 20 cái/chân",
+        "🍀 MAY MẮN: Ta tha cho đó!" 
+    ];
+
+    const amThanhTichTac = new Audio('https://www.myinstants.com/media/sounds/tick-tock.mp3'); amThanhTichTac.loop = true; 
+    const amThanhVoTay = new Audio('https://www.myinstants.com/media/sounds/kids_cheering.mp3');
+    const amThanhLeuLeu = new Audio('https://www.myinstants.com/media/sounds/nelson_haha.mp3');
+    const amThanhChuongDongHo = new Audio('https://www.myinstants.com/media/sounds/boxing-bell.mp3');
+    const amThanhTichTungGiay = new Audio('https://www.myinstants.com/media/sounds/tick-sound.mp3'); 
+
+    let khoDuLieu = []; let diem = 0; let mangSoDaChoi = []; let giayDaTroiQua = 0;
+    const thoiGianToiDaLT = 15; let dongHoLT; let dongHoHinhPhat; let thoiGianThi = 120; let dongHoThi; let soLanSaiThiDau = 0; 
+
+    function banPhaoHoa(loai) {
+        if(loai === 'nho') confetti({ particleCount: 60, spread: 60, origin: { y: 0.6 }, colors: ['#ff4757', '#1e90ff', '#2ed573', '#feca57'], zIndex: 100 });
+        else if (loai === 'to') {
+            var t = Date.now() + 2500;
+            (function loop() {
+                confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#ff4757', '#1e90ff'], zIndex: 100 });
+                confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#2ed573', '#feca57'], zIndex: 100 });
+                if (Date.now() < t) requestAnimationFrame(loop);
+            }());
+        }
+    }
+
+    async function moBangXepHang() {
+        document.getElementById("modal-bxh").classList.add("show");
+        document.getElementById("noi-dung-bxh").innerHTML = "⏳ Đang tải dữ liệu từ Bảng Vinh Danh...";
+        try {
+            let res = await fetch(API_URL + "?action=layBangXepHang"); let data = await res.json();
+            if(data.length === 0) { document.getElementById("noi-dung-bxh").innerHTML = "Chưa có võ sinh nào được vinh danh!"; return; }
+            let html = "";
+            data.forEach((user, idx) => {
+                let rankClass = idx === 0 ? 'top-1' : (idx === 1 ? 'top-2' : (idx === 2 ? 'top-3' : ''));
+                let icon = idx === 0 ? '🥇' : (idx === 1 ? '🥈' : (idx === 2 ? '🥉' : `<span style="display:inline-block; width:20px; text-align:center;">${idx+1}</span>`));
+                html += `<div class="top-item ${rankClass}"><span><span class="rank-icon">${icon}</span> ${user.ten}</span><span style="color:#2ed573;">${user.diem}⭐</span></div>`;
+            });
+            document.getElementById("noi-dung-bxh").innerHTML = html;
+        } catch(e) { document.getElementById("noi-dung-bxh").innerHTML = "❌ Lỗi kết nối mạng!"; }
+    }
+    function dongBangXepHang() { document.getElementById("modal-bxh").classList.remove("show"); }
+
+    function xaoTronMang(mang) {
+        let m = [...mang];
+        for (let i = m.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [m[i], m[j]] = [m[j], m[i]]; }
+        return m;
+    }
+
+    function chuyenDoiAmThanh() {
+        amThanhBat = !amThanhBat;
+        document.getElementById("icon-am-thanh0").innerText = amThanhBat ? "🔊" : "🔇";
+        document.getElementById("icon-am-thanh1").innerText = amThanhBat ? "🔊" : "🔇";
+        document.getElementById("icon-am-thanh2").innerText = amThanhBat ? "🔊" : "🔇";
+        document.getElementById("icon-am-thanh3").innerText = amThanhBat ? "🔊" : "🔇";
+        if(!amThanhBat) tatTichTac();
+    }
+    function phatAmThanh(am) { if(amThanhBat) { am.currentTime = 0; am.play().catch(e => console.log(e)); } }
+    function tatTichTac() { amThanhTichTac.pause(); amThanhTichTac.currentTime = 0; }
+    function formatThoiGian(giay) { let p = Math.floor(giay / 60); let s = giay % 60; return `0${p}:${s < 10 ? '0'+s : s}`; }
+
+    // --- QUÉT IP NGAY KHI VÀO TRANG & BÁO CÁO TRUY CẬP ---
+    window.onload = async function() {
+        let thietBi = navigator.userAgent; 
+        let ipTruyCap = "Không rõ";
+        try {
+            let resIp = await fetch('https://api.ipify.org?format=json');
+            let dataIp = await resIp.json();
+            ipTruyCap = dataIp.ip;
+        } catch(e) { console.log("Không quét được IP"); }
+
+        // Lưu lại để dùng tiếp khi nhập pass
+        window.myIp = ipTruyCap;
+        window.myDevice = thietBi;
+
+        // Báo cáo có người đang ở cổng (chưa cần pass)
+        let urlTruyCap = API_URL + "?action=truyCapMoi" 
+                         + "&ip=" + encodeURIComponent(ipTruyCap) 
+                         + "&device=" + encodeURIComponent(thietBi);
+        fetch(urlTruyCap);
+
+        taiDuLieu();
+    };
+
+    async function taiDuLieu() {
+        try {
+            const response = await fetch(API_URL);
+            let duLieuTho = await response.json();
+            if(duLieuTho.length > 0) {
+                khoDuLieu = xaoTronMang(duLieuTho); 
+                document.getElementById("thong-bao-tai").style.display = "none";
+                document.getElementById("khu-vuc-nhap-ma").style.display = "block";
+            } else { document.getElementById("thong-bao-tai").innerText = "⚠️ Chưa có câu hỏi nào!"; }
+        } catch (error) { document.getElementById("thong-bao-tai").innerText = "❌ Lỗi kết nối Google Sheets."; }
+    }
+
+    async function kiemTraMa() {
+        tenNguoiDung = document.getElementById("ten-vo-sinh").value.trim();
+        const maNhap = document.getElementById("ma-bao-mat").value;
+        if(tenNguoiDung === "") { alert("Vui lòng nhập tên của em trước nhé!"); return; }
+
+        if(maNhap.trim().toUpperCase() === MAT_KHAU_CLB.toUpperCase()) {
+            // Gửi dữ liệu Ghi Danh (Đã qua cổng)
+            let urlGhiDanh = API_URL + "?action=ghiDanh" 
+                             + "&ten=" + encodeURIComponent(tenNguoiDung) 
+                             + "&ip=" + encodeURIComponent(window.myIp || "Không rõ") 
+                             + "&device=" + encodeURIComponent(window.myDevice || navigator.userAgent);
+            fetch(urlGhiDanh);
+
+            document.getElementById("man-hinh-chao-khoa").style.display = "none";
+            document.getElementById("man-hinh-chon-che-do").style.display = "block";
+            document.getElementById("ten-hien-thi-che-do").innerText = "Võ sinh: " + tenNguoiDung;
+        } else {
+            document.getElementById("sai-ma").style.display = "block";
+            document.getElementById("ma-bao-mat").value = ""; 
+        }
+    }
+
+    function chonCheDo(cheDo) {
+        cheDoHienTai = cheDo; document.getElementById("man-hinh-chon-che-do").style.display = "none";
+        diem = 0; mangSoDaChoi = []; chuoiThang = 0;
+        if(cheDo === 'Luyện Tập') {
+            document.getElementById("man-hinh-chon-the").style.display = "block";
+            document.getElementById("ten-hien-thi-luyen-tap").innerText = "Võ sinh: " + tenNguoiDung;
+            document.getElementById("diem-tong").innerText = "⭐ Tổng Điểm: 0"; taoLuoiTheBai();
+        } else batDauThiDau();
+    }
+
+    /* === CHẾ ĐỘ LUYỆN TẬP === */
+    function taoLuoiTheBai() {
+        const khuVucThe = document.getElementById("khu-vuc-the-bai"); khuVucThe.innerHTML = ""; 
+        for(let i = 1; i <= 9; i++) {
+            let the = document.createElement("div"); the.className = "the-bai"; the.innerText = i;
+            the.onclick = () => xuLyChonThe(the); khuVucThe.appendChild(the);
+        }
+    }
+
+    function xuLyChonThe(theHTML) {
+        theHTML.style.transform = "scale(0.9)";
+        setTimeout(() => {
+            theHTML.style.transform = "none";
+            let indexCauHoi = layCauHoiChuaChoi();
+            if(indexCauHoi === -1) { alert("Tuyệt đỉnh! Em đã trả lời hết sạch kho dữ liệu!"); return; }
+            moCauHoiLuyenTap(indexCauHoi);
+        }, 150);
+    }
+
+    function moCauHoiLuyenTap(indexCau) {
+        mangSoDaChoi.push(indexCau); document.getElementById("man-hinh-chon-the").style.display = "none";
+        document.getElementById("man-hinh-game").style.display = "block"; document.getElementById("khu-vuc-khi").style.display = "block"; 
+        document.getElementById("khu-vuc-dong-ho-thi").style.display = "none"; document.getElementById("so-mang-thi").style.display = "none"; 
+        document.getElementById("khu-vuc-combo").style.display = "none"; document.getElementById("diem-chi-tiet").innerText = "⭐ Điểm: " + diem;
+        batDauChoKhiChayLT(); hienThiGiaoDienCauHoi(indexCau, xuLyTraLoiLuyenTap);
+    }
+
+    function batDauChoKhiChayLT() {
+        giayDaTroiQua = 0; document.getElementById("monkey").style.left = "0%"; 
+        clearInterval(dongHoLT); tatTichTac(); phatAmThanh(amThanhTichTac);
+        dongHoLT = setInterval(() => {
+            giayDaTroiQua++; document.getElementById("monkey").style.left = ((giayDaTroiQua / thoiGianToiDaLT) * 88) + "%";
+            if (giayDaTroiQua >= thoiGianToiDaLT) {
+                clearInterval(dongHoLT); tatTichTac(); phatAmThanh(amThanhLeuLeu); hienThiKetQuaLuyenTap(false, "⏰ Hết giờ!");
+            }
+        }, 1000); 
+    }
+
+    function xuLyTraLoiLuyenTap(dapAnDung) {
+        clearInterval(dongHoLT); tatTichTac(); 
+        if (dapAnDung) {
+            diem += 10; document.getElementById("diem-chi-tiet").innerText = "⭐ Điểm: " + diem;
+            document.getElementById("diem-tong").innerText = "⭐ Tổng Điểm: " + diem;
+            phatAmThanh(amThanhVoTay); banPhaoHoa('nho'); hienThiKetQuaLuyenTap(true, "🎉 Chính xác!");
+        } else { phatAmThanh(amThanhLeuLeu); hienThiKetQuaLuyenTap(false, "Rất tiếc! Sai rồi."); }
+    }
+
+    function hienThiKetQuaLuyenTap(laDung, thongBao) {
+        let htmlKetQua = `<div style="font-size: 24px; font-weight: 900; margin-bottom: 10px; color: ${laDung ? '#2ed573' : '#ff4757'};">${thongBao}</div>`;
+        if (laDung) htmlKetQua += `<p style="font-size: 16px; font-weight: 700; color: #2f3542;">Phần thưởng: Hãy bốc 1 thẻ để giáng phạt xuống đối thủ!</p>`;
+        else htmlKetQua += `<p style="font-size: 16px; font-weight: 700; color: #2f3542;">Bạn phải tự bốc 1 thẻ để nhận hình phạt!</p>`;
+
+        htmlKetQua += `<div id="khu-vuc-the-phat" class="luoi-the-phat">`;
+        for(let i=1; i<=3; i++) htmlKetQua += `<div class="the-phat" onclick="latThePhat(this, ${laDung})">❓</div>`;
+        htmlKetQua += `</div><div id="ket-qua-phat" style="display:none; font-size: 18px; font-weight: 900; margin-top: 15px; padding: 15px; border-radius: 10px; line-height: 1.4;"></div>`;
+
+        document.getElementById("cau-hoi").innerHTML = htmlKetQua;
+        let btnHTML = "";
+        if (laDung) btnHTML += `<button id="btn-bo-qua" class="btn-bo-qua" onclick="boQuaPhat()">😇 BỎ QUYỀN PHẠT</button>`;
+        btnHTML += `<button id="btn-tiep-theo" class="btn-full" style="display:none;" onclick="quayVeManHinhChonThe()">🔙 Lật Thẻ Tiếp Theo</button>`;
+        document.getElementById("dap-an").innerHTML = btnHTML;
+
+        if(laDung && (diem === 30 || diem === 50 || diem === 100)) setTimeout(() => banPhaoHoa('to'), 500);
+    }
+
+    function tinhThoiGianPhat(text) {
+        if (text.includes("2 phút")) return 120; if (text.includes("1 phút")) return 60;
+        if (text.includes("50 cái") || text.includes("2 vòng")) return 60; if (text.includes("20 cái")) return 40;
+        if (text.includes("10 cái") || text.includes("1 vòng")) return 30; return 45; 
+    }
+
+    function latThePhat(theDuocChon, laDung) {
+        document.getElementById("khu-vuc-the-phat").style.display = "none"; 
+        let phatNgauNhien = danhSachHinhPhat[Math.floor(Math.random() * danhSachHinhPhat.length)];
+        let ketQuaBox = document.getElementById("ket-qua-phat"); ketQuaBox.style.display = "block";
+
+        if (phatNgauNhien.includes("MAY MẮN")) {
+            ketQuaBox.style.background = "#e5f8ed"; ketQuaBox.style.border = "2px dashed #2ed573";
+            let txt = laDung ? "(Đối thủ may mắn thoát nạn thể lực)" : "(Bạn đã được miễn phạt thể lực)";
+            ketQuaBox.innerHTML = `QUẺ XĂM ĐẠI CÁT:<br> <span style="color:#2ed573; font-size: 22px;">${phatNgauNhien}</span><br><span style="color:#2f3542; font-size: 15px;">${txt}</span>`;
+            document.getElementById("btn-tiep-theo").style.display = "block";
+            let btnBoQua = document.getElementById("btn-bo-qua"); if(btnBoQua) btnBoQua.style.display = "none";
+        } else {
+            ketQuaBox.style.background = "#ffeaa7"; ketQuaBox.style.border = "2px dashed #fdcb6e"; ketQuaBox.style.color = "#ff4757";
+            let txt = laDung ? "ĐỐI THỦ BỊ PHẠT" : "BẠN BỊ PHẠT"; let thoiGian = tinhThoiGianPhat(phatNgauNhien);
+            ketQuaBox.innerHTML = `${txt}:<br> <span style="font-size: 22px;">💥 ${phatNgauNhien}</span>
+                <div style="margin-top: 15px; padding-top: 15px; border-top: 2px dashed #fdcb6e;">
+                    <div id="dong-ho-phat" style="font-size: 30px; font-weight: 900; color: #d63031; margin-bottom: 10px;">⏱ ${formatThoiGian(thoiGian)}</div>
+                    <button class="btn-ok" id="btn-bat-dau-phat" onclick="batDauDongHoPhat(${thoiGian})" style="background: #e17055; width: 100%; box-shadow: 0 4px 0 #d63031;">🔥 BẮT ĐẦU CHỊU PHẠT</button>
+                </div>`;
+            document.getElementById("btn-tiep-theo").style.display = "none";
+            let btnBoQua = document.getElementById("btn-bo-qua"); if(btnBoQua) btnBoQua.style.display = "none";
+        }
+    }
+
+    function batDauDongHoPhat(giay) {
+        document.getElementById("btn-bat-dau-phat").style.display = "none"; let time = giay;
+        let dh = document.getElementById("dong-ho-phat"); dh.innerText = `⏱ ${formatThoiGian(time)}`;
+        phatAmThanh(amThanhChuongDongHo); phatAmThanh(amThanhTichTac); 
+        
+        clearInterval(dongHoHinhPhat);
+        dongHoHinhPhat = setInterval(() => {
+            time--; dh.innerText = `⏱ ${formatThoiGian(time)}`;
+            if (time > 0 && amThanhBat) { amThanhTichTungGiay.currentTime = 0; amThanhTichTungGiay.play().catch(e=>console.log(e)); }
+            if (time === 15) {
+                if (amThanhBat && 'speechSynthesis' in window) {
+                    let msg = new SpeechSynthesisUtterance("Còn 15 giây"); msg.lang = 'vi-VN'; window.speechSynthesis.speak(msg);
+                }
+                dh.style.animation = "pulse 0.5s infinite alternate"; dh.style.color = "#ff9f43"; 
+            }
+            if(time <= 0) {
+                clearInterval(dongHoHinhPhat); tatTichTac(); dh.style.animation = "none"; dh.innerText = "🎉 ĐÃ HOÀN THÀNH PHẠT!"; dh.style.color = "#2ed573";
+                phatAmThanh(amThanhVoTay); document.getElementById("btn-tiep-theo").style.display = "block";
+            }
+        }, 1000);
+    }
+
+    function boQuaPhat() {
+        document.getElementById("khu-vuc-the-phat").style.display = "none"; let ketQuaBox = document.getElementById("ket-qua-phat");
+        ketQuaBox.style.display = "block"; ketQuaBox.innerHTML = "Tuyệt vời! Bạn đã bác ái bỏ qua hình phạt 😇";
+        ketQuaBox.style.color = "#2ed573"; ketQuaBox.style.borderColor = "#2ed573"; ketQuaBox.style.background = "#e5f8ed";
+        document.getElementById("btn-bo-qua").style.display = "none"; document.getElementById("btn-tiep-theo").style.display = "block";
+    }
+
+    function quayVeManHinhChonThe() {
+        clearInterval(dongHoHinhPhat); tatTichTac(); document.getElementById("btn-luu-diem-luyen-tap").style.display = "block"; 
+        document.getElementById("man-hinh-game").style.display = "none"; document.getElementById("man-hinh-chon-the").style.display = "block";
+    }
+
+    /* === CHẾ ĐỘ THI ĐẤU === */
+    function batDauThiDau() {
+        document.getElementById("man-hinh-game").style.display = "block"; document.getElementById("khu-vuc-khi").style.display = "none"; 
+        document.getElementById("khu-vuc-dong-ho-thi").style.display = "block"; 
+        diem = 0; thoiGianThi = 120; mangSoDaChoi = []; soLanSaiThiDau = 0; chuoiThang = 0;
+        document.getElementById("so-mang-thi").style.display = "block"; document.getElementById("so-mang-thi").innerText = "❤️❤️❤️❤️❤️";
+        document.getElementById("diem-chi-tiet").innerText = "⭐ Điểm: 0"; document.getElementById("khu-vuc-dong-ho-thi").innerText = "⏱ 02:00";
+        document.getElementById("khu-vuc-combo").style.display = "none";
+        phatAmThanh(amThanhTichTac); dongHoThi = setInterval(demNguocThi, 1000); chuyenCauHoiThi();
+    }
+
+    function demNguocThi() {
+        thoiGianThi--; document.getElementById("khu-vuc-dong-ho-thi").innerText = `⏱ ${formatThoiGian(thoiGianThi)}`;
+        if (thoiGianThi <= 0) { clearInterval(dongHoThi); tatTichTac(); ketThucThiDau(false, false); }
+    }
+
+    function chuyenCauHoiThi() {
+        if(thoiGianThi <= 0 || soLanSaiThiDau >= 5) return;
+        let indexCauHoi = layCauHoiChuaChoi();
+        if(indexCauHoi === -1) { clearInterval(dongHoThi); tatTichTac(); ketThucThiDau(true, false); return; }
+        mangSoDaChoi.push(indexCauHoi); hienThiGiaoDienCauHoi(indexCauHoi, xuLyTraLoiThiDau);
+    }
+
+    function capNhatCombo() {
+        let boxCombo = document.getElementById("khu-vuc-combo");
+        if(chuoiThang >= 3) {
+            boxCombo.style.display = "block";
+            if(chuoiThang >= 10) boxCombo.innerHTML = `🔥 Thần thánh! Chuỗi x${chuoiThang} 🔥`;
+            else if(chuoiThang >= 5) boxCombo.innerHTML = `⚡ Không thể cản bước! Chuỗi x${chuoiThang}`;
+            else boxCombo.innerHTML = `🔥 Đang vào phom! Chuỗi x${chuoiThang}`;
+        } else boxCombo.style.display = "none";
+    }
+
+    function xuLyTraLoiThiDau(dapAnDung, nutDuocBam) {
+        let cacNut = document.getElementById("dap-an").querySelectorAll('.ans-btn'); cacNut.forEach(n => n.disabled = true);
+        if (dapAnDung) {
+            nutDuocBam.style.background = "#2ed573"; diem += 10; chuoiThang++;
+            document.getElementById("diem-chi-tiet").innerText = "⭐ Điểm: " + diem;
+            phatAmThanh(amThanhVoTay); banPhaoHoa('nho'); capNhatCombo();
+        } else {
+            nutDuocBam.style.background = "#ff4757"; phatAmThanh(amThanhLeuLeu); chuoiThang = 0; capNhatCombo();
+            soLanSaiThiDau++; let mangHTML = "";
+            for(let i=0; i< (5 - soLanSaiThiDau); i++) mangHTML += "❤️";
+            for(let i=0; i< soLanSaiThiDau; i++) mangHTML += "🖤";
+            document.getElementById("so-mang-thi").innerText = mangHTML;
+        }
+
+        setTimeout(() => { 
+            if(soLanSaiThiDau >= 5) { clearInterval(dongHoThi); tatTichTac(); ketThucThiDau(false, true); } 
+            else if(thoiGianThi > 0) chuyenCauHoiThi(); 
+        }, 800);
+    }
+
+    function ketThucThiDau(hetKho = false, hetMang = false) {
+        document.getElementById("khu-vuc-combo").style.display = "none"; let textTitle = ""; let loiNhacNho = "";
+        if(!hetMang) setTimeout(() => banPhaoHoa('to'), 500);
+
+        if(hetKho) textTitle = "BẠN ĐÃ LÀM SẠCH KHO CÂU HỎI!";
+        else if(hetMang) {
+            textTitle = "❌ DỪNG CUỘC CHƠI!";
+            loiNhacNho = `<div style="font-size: 15px; color: #e17055; margin-top: 15px; background: #ffeaa7; padding: 15px; border-radius: 10px; border: 2px dashed #fdcb6e; line-height: 1.4;">👨‍🏫 <b>Thầy nhắc nhở:</b> Em cần xem lại tài liệu và ôn luyện lý thuyết nhiều hơn nhé. Cố gắng ở lần sau nhé!</div>`;
+        } else textTitle = "⏰ HẾT GIỜ THI ĐẤU!";
+
+        document.getElementById("cau-hoi").innerHTML = `
+            <div style="font-size: 22px; font-weight: 900; color: #ff4757; margin-bottom: 10px;">${textTitle}</div>
+            <div style="font-size: 18px; font-weight: 700;">Em đạt được tổng: <span style="color:#1e90ff; font-size:26px;">${diem}</span> Điểm</div>
+            <p style="font-style:italic; font-size: 14px; margin-bottom: 0;">(Tương đương trả lời đúng ${diem/10} câu)</p>
+            ${loiNhacNho}
+        `;
+        document.getElementById("dap-an").innerHTML = `<button class="btn-full btn-luu" onclick="luuLichSu()">💾 LƯU KẾT QUẢ & THOÁT</button>`;
+    }
+
+    function layCauHoiChuaChoi() {
+        let indexCauHoi = -1;
+        for(let i = 0; i < khoDuLieu.length; i++) { if(!mangSoDaChoi.includes(i)) { indexCauHoi = i; break; } }
+        return indexCauHoi;
+    }
+
+    function hienThiGiaoDienCauHoi(indexCau, hamXuLyKhiClick) {
+        const duLieuCau = khoDuLieu[indexCau]; let noiDungHTML = "";
+        if (chuoiThang >= 3) {
+            let comboText = chuoiThang >= 5 ? "⚡ KHÔNG THỂ CẢN BƯỚC" : "🔥 ĐANG VÀO PHOM";
+            noiDungHTML += `<div style="color: #ff4757; font-weight: 900; font-size: 14px; margin-bottom: 10px; animation: pulse 0.5s infinite alternate;">Chuỗi đúng x${chuoiThang}: ${comboText}</div>`;
+        }
+        if (duLieuCau.hinhAnh && duLieuCau.hinhAnh.trim() !== "") noiDungHTML += `<img src="${duLieuCau.hinhAnh}" class="question-img">`;
+        noiDungHTML += `<div>${duLieuCau.cauHoi}</div>`; document.getElementById("cau-hoi").innerHTML = noiDungHTML;
+        
+        const khuVucDapAn = document.getElementById("dap-an"); khuVucDapAn.innerHTML = "";
+        let danhSachDapAnTam = duLieuCau.cacDapAn.map((dapAn, index) => { return { noiDung: dapAn, laDapAnDung: (index === duLieuCau.dapAnDung) }; });
+
+        let danhSachDapAnDaXao = xaoTronMang(danhSachDapAnTam);
+        danhSachDapAnDaXao.forEach((dapAnHienTai) => {
+            const nut = document.createElement("button"); nut.className = "ans-btn"; nut.innerText = dapAnHienTai.noiDung;
+            nut.onclick = function() { hamXuLyKhiClick(dapAnHienTai.laDapAnDung, this); }; khuVucDapAn.appendChild(nut);
+        });
+    }
+
+    function luuLichSu() {
+        if(diem === 0 && soLanSaiThiDau === 0) { alert("Em chưa ghi được điểm nào cả!"); return; }
+        let urlLuu = API_URL + "?action=luuDiem&ten=" + encodeURIComponent(tenNguoiDung + " [" + cheDoHienTai + "]") + "&diem=" + diem;
+        let cacNutLuu = document.querySelectorAll(".btn-luu");
+        cacNutLuu.forEach(n => { n.innerText = "⏳ ĐANG LƯU DỮ LIỆU..."; n.disabled = true; });
+
+        fetch(urlLuu).then(response => response.text()).then(data => {
+            alert(`🏆 Đã lưu thành tích ${cheDoHienTai} thành công!`); location.reload(); 
+        }).catch(error => {
+            alert("Lỗi mạng! Chưa thể lưu điểm.");
+            cacNutLuu.forEach(n => { n.innerText = "💾 LƯU KẾT QUẢ & THOÁT"; n.disabled = false; });
+        });
+    }
+</script>
+
+</body>
+</html>
