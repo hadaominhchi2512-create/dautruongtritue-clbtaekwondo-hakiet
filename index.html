@@ -551,6 +551,36 @@
             cacNutLuu.forEach(n => { n.innerText = "💾 LƯU KẾT QUẢ & THOÁT"; n.disabled = false; });
         });
     }
+
+    // =========================================================================
+    // BỘ PHẬN GIÁM THỊ NGẦM (Chống thoát ngang & Chống đổi tab / tra tài liệu)
+    // =========================================================================
+
+    // 1. Theo dõi hành vi Đổi Tab / Thu nhỏ màn hình (Nghi ngờ tra tài liệu)
+    document.addEventListener("visibilitychange", function() {
+        if (document.visibilityState === 'hidden') {
+            luuDiemNgapLapTuc("Đổi Tab/Ẩn trang");
+        }
+    });
+
+    // 2. Theo dõi hành vi Tắt trang / Bấm nút Back (Bỏ dở giữa chừng)
+    window.addEventListener("pagehide", function(event) {
+        luuDiemNgapLapTuc("Thoát ngang/Bỏ dở");
+    });
+
+    // 3. Hàm thực thi bắn dữ liệu ngầm siêu tốc về Sheets
+    function luuDiemNgapLapTuc(lyDo) {
+        // Hệ thống chỉ lưu nếu võ sinh đó đã đăng nhập thành công và đã chơi được ít nhất 1 câu (điểm > 0)
+        if (tenNguoiDung && tenNguoiDung !== "" && diem > 0) {
+            // Gắn thêm chế độ chơi và lý do vào sau cái tên. Ví dụ: "Hà Kiệt [Thi Đấu] [Đổi Tab/Ẩn trang]"
+            var tenBaoCao = tenNguoiDung + " [" + cheDoHienTai + "] [" + lyDo + "]";
+            var linkGuiDiem = API_URL + "?action=luuDiem&ten=" + encodeURIComponent(tenBaoCao) + "&diem=" + diem;
+            
+            // Dùng công nghệ fetch keepalive: Đảm bảo dữ liệu vẫn bay về Sheets dù trang web đang bị đóng đi
+            fetch(linkGuiDiem, { method: 'GET', keepalive: true }).catch(err => console.log(err));
+        }
+    }
+    // =========================================================================
 </script>
 
 </body>
