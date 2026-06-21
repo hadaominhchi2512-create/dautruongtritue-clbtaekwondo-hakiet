@@ -245,27 +245,27 @@
     function tatTichTac() { amThanhTichTac.pause(); amThanhTichTac.currentTime = 0; }
     function formatThoiGian(giay) { let p = Math.floor(giay / 60); let s = giay % 60; return `0${p}:${s < 10 ? '0'+s : s}`; }
 
-    // --- QUÉT IP NGAY KHI VÀO TRANG & BÁO CÁO TRUY CẬP ---
-    window.onload = async function() {
-        let thietBi = navigator.userAgent; 
-        let ipTruyCap = "Không rõ";
-        try {
-            let resIp = await fetch('https://api.ipify.org?format=json');
-            let dataIp = await resIp.json();
-            ipTruyCap = dataIp.ip;
-        } catch(e) { console.log("Không quét được IP"); }
+    // --- SỬA LỖI TỐC ĐỘ: TẢI DATA NGAY LẬP TỨC, QUÉT IP CHẠY NGẦM SAU ---
+    window.onload = function() {
+        // Tải câu hỏi từ Sheets ngay lập tức không cần đợi chờ
+        taiDuLieu(); 
 
-        // Lưu lại để dùng tiếp khi nhập pass
-        window.myIp = ipTruyCap;
+        let thietBi = navigator.userAgent;
         window.myDevice = thietBi;
 
-        // Báo cáo có người đang ở cổng (chưa cần pass)
-        let urlTruyCap = API_URL + "?action=truyCapMoi" 
-                         + "&ip=" + encodeURIComponent(ipTruyCap) 
-                         + "&device=" + encodeURIComponent(thietBi);
-        fetch(urlTruyCap);
-
-        taiDuLieu();
+        // Quét IP âm thầm chạy ngầm phía sau
+        fetch('https://api.ipify.org?format=json')
+            .then(res => res.json())
+            .then(dataIp => {
+                window.myIp = dataIp.ip;
+                let urlTruyCap = API_URL + "?action=truyCapMoi&ip=" + encodeURIComponent(dataIp.ip) + "&device=" + encodeURIComponent(thietBi);
+                fetch(urlTruyCap);
+            })
+            .catch(e => {
+                window.myIp = "Không rõ";
+                let urlTruyCap = API_URL + "?action=truyCapMoi&ip=Không rõ&device=" + encodeURIComponent(thietBi);
+                fetch(urlTruyCap);
+            });
     };
 
     async function taiDuLieu() {
@@ -286,7 +286,6 @@
         if(tenNguoiDung === "") { alert("Vui lòng nhập tên của em trước nhé!"); return; }
 
         if(maNhap.trim().toUpperCase() === MAT_KHAU_CLB.toUpperCase()) {
-            // Gửi dữ liệu Ghi Danh (Đã qua cổng)
             let urlGhiDanh = API_URL + "?action=ghiDanh" 
                              + "&ten=" + encodeURIComponent(tenNguoiDung) 
                              + "&ip=" + encodeURIComponent(window.myIp || "Không rõ") 
@@ -553,46 +552,48 @@
     }
 
     // =========================================================================
-    // BỘ PHẬN GIÁM THỊ NGẦM (Phiên bản "Bàn Tay Sắt" - Chỉ lưu 1 lần và Văng game)
+    // BỘ PHẬN GIÁM THỊ NGẦM (Lưu điểm âm thầm, chờ quay lại mới xử phạt)
     // =========================================================================
 
-    let daBiBatGiamSat = false; // Biến khóa: Đảm bảo chỉ phạt 1 lần duy nhất
+    let daGianLan = false;
 
     // 1. Theo dõi hành vi Đổi Tab / Thu nhỏ màn hình
     document.addEventListener("visibilitychange", function() {
         if (document.visibilityState === 'hidden') {
-            trungPhatGianLan();
+            // Khi học sinh vừa mới giấu trang đi -> Bắn điểm phạt ngầm ngay
+            xuLyKhiGiauTrang();
+        } else if (document.visibilityState === 'visible' && daGianLan) {
+            // Khi học sinh mở lại trang (đã bị gắn cờ gian lận) -> Bắt đầu mắng
+            setTimeout(() => {
+                alert("Bạn đã bị bắt! 🚨 Tính nhắn tin cho ai hay đang định hỏi 'chị Google'?. Khó quá thì chạy tìm người thân trợ giúp và dồn 200% công lực vào bài làm đi nào!");
+                // Người dùng phải bấm OK thì mới chạy lệnh Reload ở dưới
+                location.reload(); 
+            }, 300); // Đợi 0.3 giây cho giao diện hiện lên để họ còn biết mình đang ở đâu
         }
     });
 
     // 2. Theo dõi hành vi Tắt trang / Bấm nút Back
     window.addEventListener("pagehide", function(event) {
-        trungPhatGianLan();
+        xuLyKhiGiauTrang();
     });
 
-    // 3. Hàm thực thi hình phạt: Lưu điểm + Đuổi ra khỏi phòng thi
-    function trungPhatGianLan() {
-        // Chỉ phạt nếu học sinh đang trong trận (đã nhập tên), chưa bị bắt lần nào, và có điểm > 0
-        if (tenNguoiDung && tenNguoiDung !== "" && diem > 0 && !daBiBatGiamSat) {
+    function xuLyKhiGiauTrang() {
+        // Chỉ lưu phạt nếu học sinh đang trong trận (có điểm > 0) và chưa bị bắt lần nào
+        if (tenNguoiDung && tenNguoiDung !== "" && diem > 0 && !daGianLan) {
+            daGianLan = true; // Gắn cờ vi phạm (Khóa lại không cho lưu 2 lần)
             
-            daBiBatGiamSat = true; // Khóa lại, không cho chạy hàm này lần 2
-
-            // Ghi nhận 1 lỗi duy nhất
-            var tenBaoCao = tenNguoiDung + " [" + cheDoHienTai + "] [Bỏ Ngang / Gian Lận]";
+            // SỬA LỖI BẢNG VINH DANH: Thay đổi cách ghi chữ để đánh lừa hàm QUERY của Sheets
+            // Ví dụ: Hà Kiệt (Thi Đấu - Hủy Kết Quả) -> Code Sheets không thấy chữ [Thi Đấu] nên sẽ loại ra
+            var tenBaoCao = tenNguoiDung + " (" + cheDoHienTai + " - Hủy Kết Quả)";
             var linkGuiDiem = API_URL + "?action=luuDiem&ten=" + encodeURIComponent(tenBaoCao) + "&diem=" + diem;
             
-            // Bắn dữ liệu ngầm về Sheets
+            // Âm thầm bắn dữ liệu về Sheets
             fetch(linkGuiDiem, { method: 'GET', keepalive: true }).catch(err => console.log(err));
 
-            // HÌNH PHẠT THÉP: Dừng mọi đồng hồ và đẩy thẳng ra màn hình khóa
+            // Dừng ngay mọi đồng hồ đếm ngược lại
             clearInterval(dongHoLT); 
             clearInterval(dongHoThi); 
             tatTichTac();
-            
-            alert("Tít tít! 🚨 Nhắn tin cho ai hay đang định hỏi 'chị Google' thế kia?. Chạy tìm người thân trợ giúp và dồn 200% công lực vào bài làm đi nào!");
-            
-            // Reload lại toàn bộ trang web (Đuổi ra ngoài cổng)
-            location.reload(); 
         }
     }
     // =========================================================================
