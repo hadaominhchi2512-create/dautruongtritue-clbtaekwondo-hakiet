@@ -178,6 +178,8 @@
     // ==========================================
 
     let tenNguoiDung = ""; let cheDoHienTai = ""; let amThanhBat = true; let chuoiThang = 0; 
+    let daXuLyKetQua = false; // CHỐT CHẶN CHỐNG GHI TRÙNG DỮ LIỆU ĐẦU RA
+
     const danhSachHinhPhat = [
         "💪 Hít đất 10 cái", "🍀 MAY MẮN: ôm từng người và nói cảm ơn", "🐸 Bật cóc 1 vòng", 
         "🏋️ Thụt dầu 20 cái", "🍀 MAY MẮN: ngồi vỗ tay và nói cảm ơn", "🦵 Trung bình tấn 1 phút", 
@@ -245,26 +247,20 @@
     function tatTichTac() { amThanhTichTac.pause(); amThanhTichTac.currentTime = 0; }
     function formatThoiGian(giay) { let p = Math.floor(giay / 60); let s = giay % 60; return `0${p}:${s < 10 ? '0'+s : s}`; }
 
-    // --- SỬA LỖI TỐC ĐỘ: TẢI DATA NGAY LẬP TỨC, QUÉT IP CHẠY NGẦM SAU ---
+    // --- ĐÃ BỎ LỆNH GỬI TRUYCAPMOI ĐỂ TRÁNH RÁC DỮ LIỆU ---
     window.onload = function() {
-        // Tải câu hỏi từ Sheets ngay lập tức không cần đợi chờ
         taiDuLieu(); 
-
         let thietBi = navigator.userAgent;
         window.myDevice = thietBi;
 
-        // Quét IP âm thầm chạy ngầm phía sau
+        // Chỉ quét IP âm thầm để chuẩn bị dữ liệu cho nút bấm Ghi Danh
         fetch('https://api.ipify.org?format=json')
             .then(res => res.json())
             .then(dataIp => {
                 window.myIp = dataIp.ip;
-                let urlTruyCap = API_URL + "?action=truyCapMoi&ip=" + encodeURIComponent(dataIp.ip) + "&device=" + encodeURIComponent(thietBi);
-                fetch(urlTruyCap);
             })
             .catch(e => {
                 window.myIp = "Không rõ";
-                let urlTruyCap = API_URL + "?action=truyCapMoi&ip=Không rõ&device=" + encodeURIComponent(thietBi);
-                fetch(urlTruyCap);
             });
     };
 
@@ -304,6 +300,7 @@
     function chonCheDo(cheDo) {
         cheDoHienTai = cheDo; document.getElementById("man-hinh-chon-che-do").style.display = "none";
         diem = 0; mangSoDaChoi = []; chuoiThang = 0;
+        daXuLyKetQua = false; // MỞ KHÓA CHỐT SẴN SÀNG CHO VÁN MỚI
         if(cheDo === 'Luyện Tập') {
             document.getElementById("man-hinh-chon-the").style.display = "block";
             document.getElementById("ten-hien-thi-luyen-tap").innerText = "Võ sinh: " + tenNguoiDung;
@@ -537,8 +534,13 @@
         });
     }
 
+    // --- HÀM LƯU KẾT QUẢ CHỦ ĐỘNG (BẤM NÚT) ---
     function luuLichSu() {
+        if (daXuLyKetQua) return; // NẾU CHỐT ĐÃ KHÓA THÌ KHÔNG CHO GỬI NỮA
         if(diem === 0 && soLanSaiThiDau === 0) { alert("Em chưa ghi được điểm nào cả!"); return; }
+        
+        daXuLyKetQua = true; // KHÓA CHỐT NGAY LẬP TỨC KHI BẮT ĐẦU GỬI
+        
         let urlLuu = API_URL + "?action=luuDiem&ten=" + encodeURIComponent(tenNguoiDung + " [" + cheDoHienTai + "]") + "&diem=" + diem;
         let cacNutLuu = document.querySelectorAll(".btn-luu");
         cacNutLuu.forEach(n => { n.innerText = "⏳ ĐANG LƯU DỮ LIỆU..."; n.disabled = true; });
@@ -547,6 +549,7 @@
             alert(`🏆 Đã lưu thành tích ${cheDoHienTai} thành công!`); location.reload(); 
         }).catch(error => {
             alert("Lỗi mạng! Chưa thể lưu điểm.");
+            daXuLyKetQua = false; // NẾU LỖI MẠNG THÌ MỞ KHÓA CHO HỌ LƯU LẠI
             cacNutLuu.forEach(n => { n.innerText = "💾 LƯU KẾT QUẢ & THOÁT"; n.disabled = false; });
         });
     }
@@ -555,20 +558,21 @@
     // BỘ PHẬN GIÁM THỊ NGẦM (Lưu điểm âm thầm, chờ quay lại mới xử phạt)
     // =========================================================================
 
-    let daGianLan = false;
-
     // 1. Theo dõi hành vi Đổi Tab / Thu nhỏ màn hình
     document.addEventListener("visibilitychange", function() {
         if (document.visibilityState === 'hidden') {
             // Khi học sinh vừa mới giấu trang đi -> Bắn điểm phạt ngầm ngay
             xuLyKhiGiauTrang();
-        } else if (document.visibilityState === 'visible' && daGianLan) {
-            // Khi học sinh mở lại trang (đã bị gắn cờ gian lận) -> Bắt đầu mắng
-            setTimeout(() => {
-                alert("Bạn đã bị bắt! 🚨 tính nhắn tin cho ai hay định hỏi 'chị Google' thế?. Khó quá thì chạy tìm người thân trợ giúp và dồn 200% công lực vào bài làm, không được gian lận nhé!❤️❤️❤️");
-                // Người dùng phải bấm OK thì mới chạy lệnh Reload ở dưới
-                location.reload(); 
-            }, 300); // Đợi 0.3 giây cho giao diện hiện lên để họ còn biết mình đang ở đâu
+        } else if (document.visibilityState === 'visible' && daXuLyKetQua) {
+            // Chỉ mắng nếu hành vi ẩn trang xảy ra trong lúc đang thi đấu
+            // (Nếu học sinh đã bấm nút Lưu điểm rồi mới giấu trang thì chốt đã khóa, không mắng nữa)
+            let scoreBoxHTML = document.getElementById("cau-hoi").innerHTML;
+            if (scoreBoxHTML.includes("HỦY KẾT QUẢ") || scoreBoxHTML.includes("BẮT ĐẦU CHỊU PHẠT") || cheDoHienTai === "Thi Đấu") {
+                setTimeout(() => {
+                    alert("Bạn đã bị bắt! 🚨 tính nhắn tin cho ai hay định hỏi 'chị Google' thế?. Khó quá thì chạy tìm người thân trợ giúp và dồn 200% công lực vào bài làm, không được gian lận nhé!❤️❤️❤️\t");
+                    location.reload(); 
+                }, 300);
+            }
         }
     });
 
@@ -577,13 +581,12 @@
         xuLyKhiGiauTrang();
     });
 
+    // --- HÀM HỦY HOẶC THOÁT NGANG ÂM THẦM ---
     function xuLyKhiGiauTrang() {
-        // Chỉ lưu phạt nếu học sinh đang trong trận (có điểm > 0) và chưa bị bắt lần nào
-        if (tenNguoiDung && tenNguoiDung !== "" && diem > 0 && !daGianLan) {
-            daGianLan = true; // Gắn cờ vi phạm (Khóa lại không cho lưu 2 lần)
+        // Chỉ lưu phạt nếu học sinh đang trong trận (có điểm > 0) và CHƯA XỬ LÝ KẾT QUẢ (chưa bấm nút lưu trước đó)
+        if (tenNguoiDung && tenNguoiDung !== "" && diem > 0 && !daXuLyKetQua) {
+            daXuLyKetQua = true; // KHÓA CHỐT LẠI LUÔN ĐỂ KHÔNG BỊ TRÙNG LẶP DỮ LIỆU
             
-            // SỬA LỖI BẢNG VINH DANH: Thay đổi cách ghi chữ để đánh lừa hàm QUERY của Sheets
-            // Ví dụ: Hà Kiệt (Thi Đấu - Hủy Kết Quả) -> Code Sheets không thấy chữ [Thi Đấu] nên sẽ loại ra
             var tenBaoCao = tenNguoiDung + " (" + cheDoHienTai + " - Hủy Kết Quả)";
             var linkGuiDiem = API_URL + "?action=luuDiem&ten=" + encodeURIComponent(tenBaoCao) + "&diem=" + diem;
             
