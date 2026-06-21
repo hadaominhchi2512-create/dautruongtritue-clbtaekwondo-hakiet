@@ -212,7 +212,11 @@
         }
     }
 
+    // --- HÀM MỞ BẢNG XẾP HẠNG & CAMERA AN NINH TEXT ---
     async function moBangXepHang() {
+        let urlXemBXH = API_URL + "?action=cameraAnNinh&hanhDong=" + encodeURIComponent("Mở xem Bảng Vinh Danh rồi thoát") + "&device=" + encodeURIComponent(window.myDevice || "");
+        fetch(urlXemBXH, { method: 'GET', keepalive: true }).catch(e => console.log(e));
+
         document.getElementById("modal-bxh").classList.add("show");
         document.getElementById("noi-dung-bxh").innerHTML = "⏳ Đang tải dữ liệu từ Bảng Vinh Danh...";
         try {
@@ -247,21 +251,19 @@
     function tatTichTac() { amThanhTichTac.pause(); amThanhTichTac.currentTime = 0; }
     function formatThoiGian(giay) { let p = Math.floor(giay / 60); let s = giay % 60; return `0${p}:${s < 10 ? '0'+s : s}`; }
 
-    // --- ĐÃ BỎ LỆNH GỬI TRUYCAPMOI ĐỂ TRÁNH RÁC DỮ LIỆU ---
+    // --- KHỞI ĐỘNG TRANG & LƯU VẾT "ĐỨNG TRƯỚC CỬA" ---
     window.onload = function() {
         taiDuLieu(); 
         let thietBi = navigator.userAgent;
         window.myDevice = thietBi;
 
-        // Chỉ quét IP âm thầm để chuẩn bị dữ liệu cho nút bấm Ghi Danh
+        let urlDungCua = API_URL + "?action=cameraAnNinh&hanhDong=" + encodeURIComponent("Đứng trước cửa Web (Vừa mở Link)") + "&device=" + encodeURIComponent(thietBi);
+        fetch(urlDungCua, { method: 'GET', keepalive: true }).catch(e => console.log(e));
+
         fetch('https://api.ipify.org?format=json')
             .then(res => res.json())
-            .then(dataIp => {
-                window.myIp = dataIp.ip;
-            })
-            .catch(e => {
-                window.myIp = "Không rõ";
-            });
+            .then(dataIp => { window.myIp = dataIp.ip; window.myDevice += " | IP: " + dataIp.ip; })
+            .catch(e => { window.myIp = "Không rõ"; window.myDevice += " | IP: Ẩn"; });
     };
 
     async function taiDuLieu() {
@@ -276,6 +278,7 @@
         } catch (error) { document.getElementById("thong-bao-tai").innerText = "❌ Lỗi kết nối Google Sheets."; }
     }
 
+    // --- KIỂM TRA MÃ BẢO MẬT VÀ GHI LOG KẺ GIAN ---
     async function kiemTraMa() {
         tenNguoiDung = document.getElementById("ten-vo-sinh").value.trim();
         const maNhap = document.getElementById("ma-bao-mat").value;
@@ -292,6 +295,13 @@
             document.getElementById("man-hinh-chon-che-do").style.display = "block";
             document.getElementById("ten-hien-thi-che-do").innerText = "Võ sinh: " + tenNguoiDung;
         } else {
+            let urlNhapSai = API_URL + "?action=cameraAnNinh"
+                             + "&hanhDong=" + encodeURIComponent("Nhập sai mã bảo mật") 
+                             + "&ten=" + encodeURIComponent(tenNguoiDung) 
+                             + "&maSai=" + encodeURIComponent(maNhap)
+                             + "&device=" + encodeURIComponent(window.myDevice || "");
+            fetch(urlNhapSai, { method: 'GET', keepalive: true }).catch(e => console.log(e));
+
             document.getElementById("sai-ma").style.display = "block";
             document.getElementById("ma-bao-mat").value = ""; 
         }
@@ -561,11 +571,8 @@
     // 1. Theo dõi hành vi Đổi Tab / Thu nhỏ màn hình
     document.addEventListener("visibilitychange", function() {
         if (document.visibilityState === 'hidden') {
-            // Khi học sinh vừa mới giấu trang đi -> Bắn điểm phạt ngầm ngay
             xuLyKhiGiauTrang();
         } else if (document.visibilityState === 'visible' && daXuLyKetQua) {
-            // Chỉ mắng nếu hành vi ẩn trang xảy ra trong lúc đang thi đấu
-            // (Nếu học sinh đã bấm nút Lưu điểm rồi mới giấu trang thì chốt đã khóa, không mắng nữa)
             let scoreBoxHTML = document.getElementById("cau-hoi").innerHTML;
             if (scoreBoxHTML.includes("HỦY KẾT QUẢ") || scoreBoxHTML.includes("BẮT ĐẦU CHỊU PHẠT") || cheDoHienTai === "Thi Đấu") {
                 setTimeout(() => {
@@ -583,23 +590,19 @@
 
     // --- HÀM HỦY HOẶC THOÁT NGANG ÂM THẦM ---
     function xuLyKhiGiauTrang() {
-        // Chỉ lưu phạt nếu học sinh đang trong trận (có điểm > 0) và CHƯA XỬ LÝ KẾT QUẢ (chưa bấm nút lưu trước đó)
         if (tenNguoiDung && tenNguoiDung !== "" && diem > 0 && !daXuLyKetQua) {
             daXuLyKetQua = true; // KHÓA CHỐT LẠI LUÔN ĐỂ KHÔNG BỊ TRÙNG LẶP DỮ LIỆU
             
             var tenBaoCao = tenNguoiDung + " (" + cheDoHienTai + " - Hủy Kết Quả)";
             var linkGuiDiem = API_URL + "?action=luuDiem&ten=" + encodeURIComponent(tenBaoCao) + "&diem=" + diem;
             
-            // Âm thầm bắn dữ liệu về Sheets
             fetch(linkGuiDiem, { method: 'GET', keepalive: true }).catch(err => console.log(err));
 
-            // Dừng ngay mọi đồng hồ đếm ngược lại
             clearInterval(dongHoLT); 
             clearInterval(dongHoThi); 
             tatTichTac();
         }
     }
-    // =========================================================================
 </script>
 
 </body>
