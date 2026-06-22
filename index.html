@@ -77,10 +77,10 @@
         .btn-am-thanh { position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 24px; cursor: pointer; opacity: 0.7; transition: 0.3s; z-index: 20; }
         .btn-am-thanh:hover { opacity: 1; transform: scale(1.1);}
 
-        /* CSS MODAL (BẢNG XẾP HẠNG & CHỤP ẢNH) */
-        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.75); display: flex; justify-content: center; align-items: center; z-index: 100; opacity: 0; pointer-events: none; transition: 0.3s;}
+        /* CSS BẢNG VINH DANH */
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); display: flex; justify-content: center; align-items: center; z-index: 100; opacity: 0; pointer-events: none; transition: 0.3s;}
         .modal-overlay.show { opacity: 1; pointer-events: auto; }
-        .modal-content { background: white; padding: 25px 20px; border-radius: 20px; width: 90%; max-width: 400px; position: relative; text-align: center; border: 5px solid #feca57; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transform: translateY(-50px); transition: 0.3s; box-sizing: border-box;}
+        .modal-content { background: white; padding: 25px 20px; border-radius: 20px; width: 90%; max-width: 400px; position: relative; text-align: center; border: 5px solid #feca57; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transform: translateY(-50px); transition: 0.3s;}
         .modal-overlay.show .modal-content { transform: translateY(0); }
         .close-btn { position: absolute; top: 5px; right: 15px; background: none; border: none; font-size: 28px; cursor: pointer; color: #ff4757; font-weight: bold; padding: 0;}
         .top-item { display: flex; justify-content: space-between; padding: 12px 10px; border-bottom: 1px dashed #dfe4ea; font-weight: 700; font-size: 16px; color: #2f3542;}
@@ -91,30 +91,6 @@
     </style>
 </head>
 <body>
-
-<div id="modal-xin-quyen-cam" class="modal-overlay" style="display:none; opacity:1; pointer-events:auto;">
-  <div class="modal-content" style="border-color:#1e90ff;">
-    <h2 style="color:#1e90ff; margin-top:0; font-size: 22px;">📸 CHỤP ẢNH ĐIỂM DANH</h2>
-    <p id="loi-thoai-vinh-danh" style="font-size:15px; line-height:1.5; margin-bottom:15px; font-weight:600; text-align:justify; color:#2f3542;">
-      Mã bảo mật chính xác! Em hãy tự chụp một bức ảnh với tư thế võ sĩ thật oách để hệ thống ghi nhận điểm danh nhé!
-    </p>
-
-    <video id="video-preview" autoplay playsinline style="display:none; width:100%; max-height:220px; background:#000; border-radius:10px; margin-bottom:15px; transform: scaleX(-1); object-fit: cover; border: 3px solid #ced6e0; box-sizing: border-box;"></video>
-    <canvas id="canvas-hidden" style="display:none;"></canvas>
-
-    <button id="btn-mo-cam" onclick="moCameraVinhDanh()" style="background:#1e90ff; color:white; border:none; padding:15px 20px; font-weight:bold; border-radius:12px; cursor:pointer; font-size:16px; width:100%; box-shadow: 0 4px 0 #0984e3; text-transform:uppercase;">
-      🎥 MỞ CAMERA
-    </button>
-
-    <button id="btn-chup-anh" onclick="chupAnhVaVaoThi()" style="display:none; background:#2ed573; color:white; border:none; padding:15px 20px; font-weight:bold; border-radius:12px; cursor:pointer; font-size:16px; width:100%; box-shadow: 0 4px 0 #27ae60; text-transform:uppercase;">
-      📸 CHỤP & VÀO THI NGAY
-    </button>
-
-    <button id="btn-bo-qua-cam" onclick="vaoThiKhongAnh()" style="display:none; background:none; border:none; color:#747d8c; text-decoration:underline; cursor:pointer; font-size:13px; margin-top:12px; font-weight:bold;">
-      Vào thi không cần ảnh (Không khuyến khích)
-    </button>
-  </div>
-</div>
 
 <div id="modal-bxh" class="modal-overlay">
     <div class="modal-content">
@@ -171,6 +147,7 @@
     <p style="font-size: 15px; color: #2f3542; font-weight: 500;">Hãy lật một thẻ bài để nhận thử thách!</p>
     
     <div class="luoi-the-bai" id="khu-vuc-the-bai"></div>
+    
     <button class="btn-ok btn-luu" id="btn-luu-diem-luyen-tap" onclick="luuLichSu()" style="display: none;">💾 KẾT THÚC & LƯU THÀNH TÍCH</button>
 </div>
 
@@ -196,13 +173,12 @@
 
 <script>
     // ==========================================
-    const API_URL = 'https://script.google.com/macros/s/AKfycbypOubFpYaRNAmZwhVs_0cxhgre-Rpz9Oxm4V_6-w5mTXKdDL9-je16cGumTXc4r9hYtw/exec'; 
+    const API_URL = 'https://script.google.com/macros/s/AKfycbyvdeDG7XghDOg0QA61U_NX14b3g-5BOKzm9yHB7AaynCthTB3a0k9vuqfFC4ITHtthcA/exec'; 
     const MAT_KHAU_CLB = "HAKIETHKC";
     // ==========================================
 
     let tenNguoiDung = ""; let cheDoHienTai = ""; let amThanhBat = true; let chuoiThang = 0; 
-    let daXuLyKetQua = false; 
-    let cameraStream = null; 
+    let daXuLyKetQua = false; // CHỐT CHẶN CHỐNG GHI TRÙNG DỮ LIỆU ĐẦU RA
 
     const danhSachHinhPhat = [
         "💪 Hít đất 10 cái", "🍀 MAY MẮN: ôm từng người và nói cảm ơn", "🐸 Bật cóc 1 vòng", 
@@ -224,40 +200,6 @@
     let khoDuLieu = []; let diem = 0; let mangSoDaChoi = []; let giayDaTroiQua = 0;
     const thoiGianToiDaLT = 15; let dongHoLT; let dongHoHinhPhat; let thoiGianThi = 120; let dongHoThi; let soLanSaiThiDau = 0; 
 
-    // HÀM MỚI: TỰ ĐỘNG NHẬN DIỆN & RÚT GỌN TÊN THIẾT BỊ NGẮN GỌN NHẤT
-    function layThongTinThietBiGon() {
-        let ua = navigator.userAgent;
-        if (/iPhone|iPad|iPod/i.test(ua)) return "📱 Thiết bị iOS (iPhone/iPad)";
-        if (/Android/i.test(ua)) return "📱 Điện thoại Android";
-        if (/Windows/i.test(ua)) return "💻 Máy tính Windows";
-        if (/Mac/i.test(ua)) return "💻 Máy tính Mac";
-        return "📱 Thiết bị khác";
-    }
-
-    // BẮT ĐẦU CHẠY WEBSITE VÀ CHỜ LẤY IP
-    window.onload = async function() {
-        taiDuLieu(); 
-        
-        let thietBiGon = layThongTinThietBiGon();
-        window.myIp = "Đang kết nối mạng..."; 
-
-        try {
-            // Chờ lấy IP xong mới chạy tiếp (Giải quyết triệt để lỗi mất IP)
-            let res = await fetch('https://api.ipify.org?format=json');
-            let dataIp = await res.json();
-            window.myIp = dataIp.ip;
-        } catch (e) {
-            window.myIp = "Không rõ IP";
-        }
-
-        // Gộp chung tên thiết bị gọn gàng và IP đầy đủ thành 1 chuỗi
-        window.myDevice = thietBiGon + " | IP: " + window.myIp;
-
-        // BÂY GIỜ MỚI GỬI BÁO CÁO ĐỨNG TRƯỚC CỬA (Bảo đảm có đủ Thiết Bị + IP)
-        let urlDungCua = API_URL + "?action=cameraAnNinh&hanhDong=" + encodeURIComponent("Đứng trước cửa Web (Vừa mở Link)") + "&device=" + encodeURIComponent(window.myDevice);
-        fetch(urlDungCua, { method: 'GET', keepalive: true }).catch(e => console.log(e));
-    };
-
     function banPhaoHoa(loai) {
         if(loai === 'nho') confetti({ particleCount: 60, spread: 60, origin: { y: 0.6 }, colors: ['#ff4757', '#1e90ff', '#2ed573', '#feca57'], zIndex: 100 });
         else if (loai === 'to') {
@@ -270,8 +212,9 @@
         }
     }
 
+    // --- HÀM MỞ BẢNG XẾP HẠNG & CAMERA AN NINH TEXT ---
     async function moBangXepHang() {
-        let urlXemBXH = API_URL + "?action=cameraAnNinh&hanhDong=" + encodeURIComponent("Mở xem Bảng Vinh Danh rồi thoát") + "&device=" + encodeURIComponent(window.myDevice);
+        let urlXemBXH = API_URL + "?action=cameraAnNinh&hanhDong=" + encodeURIComponent("Mở xem Bảng Vinh Danh rồi thoát") + "&device=" + encodeURIComponent(window.myDevice || "");
         fetch(urlXemBXH, { method: 'GET', keepalive: true }).catch(e => console.log(e));
 
         document.getElementById("modal-bxh").classList.add("show");
@@ -308,6 +251,21 @@
     function tatTichTac() { amThanhTichTac.pause(); amThanhTichTac.currentTime = 0; }
     function formatThoiGian(giay) { let p = Math.floor(giay / 60); let s = giay % 60; return `0${p}:${s < 10 ? '0'+s : s}`; }
 
+    // --- KHỞI ĐỘNG TRANG & LƯU VẾT "ĐỨNG TRƯỚC CỬA" ---
+    window.onload = function() {
+        taiDuLieu(); 
+        let thietBi = navigator.userAgent;
+        window.myDevice = thietBi;
+
+        let urlDungCua = API_URL + "?action=cameraAnNinh&hanhDong=" + encodeURIComponent("Đứng trước cửa Web (Vừa mở Link)") + "&device=" + encodeURIComponent(thietBi);
+        fetch(urlDungCua, { method: 'GET', keepalive: true }).catch(e => console.log(e));
+
+        fetch('https://api.ipify.org?format=json')
+            .then(res => res.json())
+            .then(dataIp => { window.myIp = dataIp.ip; window.myDevice += " | IP: " + dataIp.ip; })
+            .catch(e => { window.myIp = "Không rõ"; window.myDevice += " | IP: Ẩn"; });
+    };
+
     async function taiDuLieu() {
         try {
             const response = await fetch(API_URL);
@@ -320,21 +278,28 @@
         } catch (error) { document.getElementById("thong-bao-tai").innerText = "❌ Lỗi kết nối Google Sheets."; }
     }
 
+    // --- KIỂM TRA MÃ BẢO MẬT VÀ GHI LOG KẺ GIAN ---
     async function kiemTraMa() {
         tenNguoiDung = document.getElementById("ten-vo-sinh").value.trim();
         const maNhap = document.getElementById("ma-bao-mat").value;
-        
         if(tenNguoiDung === "") { alert("Vui lòng nhập tên của em trước nhé!"); return; }
 
         if(maNhap.trim().toUpperCase() === MAT_KHAU_CLB.toUpperCase()) {
+            let urlGhiDanh = API_URL + "?action=ghiDanh" 
+                             + "&ten=" + encodeURIComponent(tenNguoiDung) 
+                             + "&ip=" + encodeURIComponent(window.myIp || "Không rõ") 
+                             + "&device=" + encodeURIComponent(window.myDevice || navigator.userAgent);
+            fetch(urlGhiDanh);
+
             document.getElementById("man-hinh-chao-khoa").style.display = "none";
-            document.getElementById("modal-xin-quyen-cam").style.display = "flex";
+            document.getElementById("man-hinh-chon-che-do").style.display = "block";
+            document.getElementById("ten-hien-thi-che-do").innerText = "Võ sinh: " + tenNguoiDung;
         } else {
             let urlNhapSai = API_URL + "?action=cameraAnNinh"
                              + "&hanhDong=" + encodeURIComponent("Nhập sai mã bảo mật") 
                              + "&ten=" + encodeURIComponent(tenNguoiDung) 
                              + "&maSai=" + encodeURIComponent(maNhap)
-                             + "&device=" + encodeURIComponent(window.myDevice);
+                             + "&device=" + encodeURIComponent(window.myDevice || "");
             fetch(urlNhapSai, { method: 'GET', keepalive: true }).catch(e => console.log(e));
 
             document.getElementById("sai-ma").style.display = "block";
@@ -342,78 +307,10 @@
         }
     }
 
-    async function moCameraVinhDanh() {
-        const btnMoCam = document.getElementById("btn-mo-cam");
-        btnMoCam.innerText = "⏳ ĐANG KẾT NỐI CAMERA...";
-        btnMoCam.disabled = true;
-
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-            cameraStream = stream; 
-            
-            const video = document.getElementById("video-preview");
-            video.srcObject = stream;
-            video.style.display = "block"; 
-
-            btnMoCam.style.display = "none";
-            document.getElementById("btn-chup-anh").style.display = "block";
-            document.getElementById("btn-bo-qua-cam").style.display = "block";
-            
-            document.getElementById("loi-thoai-vinh-danh").innerText = "Tuyệt vời! Em hãy căn chỉnh khuôn mặt, vuốt tóc thật ngầu và bấm CHỤP nhé!";
-            document.getElementById("loi-thoai-vinh-danh").style.color = "#2ed573";
-            
-        } catch (err) {
-            console.log("Từ chối/Lỗi camera:", err);
-            alert("Rất tiếc không thể kết nối Camera. Hệ thống sẽ cho phép em vào thi tạm thời.");
-            guiGhiDanhLenHeThong("Võ sinh từ chối quyền hoặc máy lỗi Camera");
-            vaoThiNgay(false);
-        }
-    }
-
-    function chupAnhVaVaoThi() {
-        document.getElementById("btn-chup-anh").innerText = "⏳ ĐANG LƯU ẢNH...";
-        
-        const video = document.getElementById("video-preview");
-        const canvas = document.getElementById("canvas-hidden");
-        
-        canvas.width = 300; canvas.height = 300;
-        const ctx = canvas.getContext("2d");
-
-        const size = Math.min(video.videoWidth, video.videoHeight);
-        const x = (video.videoWidth - size) / 2;
-        const y = (video.videoHeight - size) / 2;
-        
-        ctx.drawImage(video, x, y, size, size, 0, 0, 300, 300);
-        const base64Photo = canvas.toDataURL("image/jpeg", 0.5); 
-        
-        guiGhiDanhLenHeThong(base64Photo);
-        vaoThiNgay(true);
-    }
-
-    function vaoThiKhongAnh() {
-        guiGhiDanhLenHeThong("Võ sinh bỏ qua bước bấm chụp");
-        vaoThiNgay(true);
-    }
-
-    function vaoThiNgay(dungCamera) {
-        if (cameraStream) { cameraStream.getTracks().forEach(track => track.stop()); }
-        document.getElementById("modal-xin-quyen-cam").style.display = "none";
-        document.getElementById("man-hinh-chon-che-do").style.display = "block";
-        document.getElementById("ten-hien-thi-che-do").innerText = "Võ sinh: " + tenNguoiDung;
-    }
-
-    function guiGhiDanhLenHeThong(photoDataStr) {
-        let urlGhiDanh = API_URL + "?action=ghiDanh" 
-                         + "&ten=" + encodeURIComponent(tenNguoiDung) 
-                         + "&ip=" + encodeURIComponent(window.myIp) 
-                         + "&device=" + encodeURIComponent(window.myDevice)
-                         + "&photo=" + encodeURIComponent(photoDataStr);
-        fetch(urlGhiDanh).catch(e => console.log("Lỗi log:", e));
-    }
-
     function chonCheDo(cheDo) {
         cheDoHienTai = cheDo; document.getElementById("man-hinh-chon-che-do").style.display = "none";
-        diem = 0; mangSoDaChoi = []; chuoiThang = 0; daXuLyKetQua = false; 
+        diem = 0; mangSoDaChoi = []; chuoiThang = 0;
+        daXuLyKetQua = false; // MỞ KHÓA CHỐT SẴN SÀNG CHO VÁN MỚI
         if(cheDo === 'Luyện Tập') {
             document.getElementById("man-hinh-chon-the").style.display = "block";
             document.getElementById("ten-hien-thi-luyen-tap").innerText = "Võ sinh: " + tenNguoiDung;
@@ -421,6 +318,7 @@
         } else batDauThiDau();
     }
 
+    /* === CHẾ ĐỘ LUYỆN TẬP === */
     function taoLuoiTheBai() {
         const khuVucThe = document.getElementById("khu-vuc-the-bai"); khuVucThe.innerHTML = ""; 
         for(let i = 1; i <= 9; i++) {
@@ -549,6 +447,7 @@
         document.getElementById("man-hinh-game").style.display = "none"; document.getElementById("man-hinh-chon-the").style.display = "block";
     }
 
+    /* === CHẾ ĐỘ THI ĐẤU === */
     function batDauThiDau() {
         document.getElementById("man-hinh-game").style.display = "block"; document.getElementById("khu-vuc-khi").style.display = "none"; 
         document.getElementById("khu-vuc-dong-ho-thi").style.display = "block"; 
@@ -645,11 +544,13 @@
         });
     }
 
+    // --- HÀM LƯU KẾT QUẢ CHỦ ĐỘNG (BẤM NÚT) ---
     function luuLichSu() {
-        if (daXuLyKetQua) return; 
+        if (daXuLyKetQua) return; // NẾU CHỐT ĐÃ KHÓA THÌ KHÔNG CHO GỬI NỮA
         if(diem === 0 && soLanSaiThiDau === 0) { alert("Em chưa ghi được điểm nào cả!"); return; }
         
-        daXuLyKetQua = true; 
+        daXuLyKetQua = true; // KHÓA CHỐT NGAY LẬP TỨC KHI BẮT ĐẦU GỬI
+        
         let urlLuu = API_URL + "?action=luuDiem&ten=" + encodeURIComponent(tenNguoiDung + " [" + cheDoHienTai + "]") + "&diem=" + diem;
         let cacNutLuu = document.querySelectorAll(".btn-luu");
         cacNutLuu.forEach(n => { n.innerText = "⏳ ĐANG LƯU DỮ LIỆU..."; n.disabled = true; });
@@ -658,11 +559,16 @@
             alert(`🏆 Đã lưu thành tích ${cheDoHienTai} thành công!`); location.reload(); 
         }).catch(error => {
             alert("Lỗi mạng! Chưa thể lưu điểm.");
-            daXuLyKetQua = false; 
+            daXuLyKetQua = false; // NẾU LỖI MẠNG THÌ MỞ KHÓA CHO HỌ LƯU LẠI
             cacNutLuu.forEach(n => { n.innerText = "💾 LƯU KẾT QUẢ & THOÁT"; n.disabled = false; });
         });
     }
 
+    // =========================================================================
+    // BỘ PHẬN GIÁM THỊ NGẦM (Lưu điểm âm thầm, chờ quay lại mới xử phạt)
+    // =========================================================================
+
+    // 1. Theo dõi hành vi Đổi Tab / Thu nhỏ màn hình
     document.addEventListener("visibilitychange", function() {
         if (document.visibilityState === 'hidden') {
             xuLyKhiGiauTrang();
@@ -670,24 +576,31 @@
             let scoreBoxHTML = document.getElementById("cau-hoi").innerHTML;
             if (scoreBoxHTML.includes("HỦY KẾT QUẢ") || scoreBoxHTML.includes("BẮT ĐẦU CHỊU PHẠT") || cheDoHienTai === "Thi Đấu") {
                 setTimeout(() => {
-                    alert("Cảnh báo! Phát hiện hành vi rời khỏi màn hình. Đã tự động hủy kết quả phiên này. Lần sau hãy tập trung 100% công lực làm bài nhé! ❤️❤️❤️");
+                    alert("Bạn đã bị bắt! 🚨 tính nhắn tin cho ai hay định hỏi 'chị Google' thế?. Khó quá thì chạy tìm người thân trợ giúp và dồn 200% công lực vào bài làm, không được gian lận nhé!❤️❤️❤️\t");
                     location.reload(); 
                 }, 300);
             }
         }
     });
 
+    // 2. Theo dõi hành vi Tắt trang / Bấm nút Back
     window.addEventListener("pagehide", function(event) {
         xuLyKhiGiauTrang();
     });
 
+    // --- HÀM HỦY HOẶC THOÁT NGANG ÂM THẦM ---
     function xuLyKhiGiauTrang() {
         if (tenNguoiDung && tenNguoiDung !== "" && diem > 0 && !daXuLyKetQua) {
-            daXuLyKetQua = true; 
+            daXuLyKetQua = true; // KHÓA CHỐT LẠI LUÔN ĐỂ KHÔNG BỊ TRÙNG LẶP DỮ LIỆU
+            
             var tenBaoCao = tenNguoiDung + " (" + cheDoHienTai + " - Hủy Kết Quả)";
             var linkGuiDiem = API_URL + "?action=luuDiem&ten=" + encodeURIComponent(tenBaoCao) + "&diem=" + diem;
+            
             fetch(linkGuiDiem, { method: 'GET', keepalive: true }).catch(err => console.log(err));
-            clearInterval(dongHoLT); clearInterval(dongHoThi); tatTichTac();
+
+            clearInterval(dongHoLT); 
+            clearInterval(dongHoThi); 
+            tatTichTac();
         }
     }
 </script>
