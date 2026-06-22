@@ -182,13 +182,13 @@
 
     const danhSachHinhPhat = [
         "💪 Hít đất 10 cái", "🍀 MAY MẮN: ôm từng người và nói cảm ơn", "🐸 Bật cóc 1 vòng", 
-        "🏋️ Thụt dầu 20 cái", "🍀 MAY MẮN: ngồi vỗ tay và nói cảm ơn", "🦵 Trung bình tấn 1 phút", 
+        "🏋️ Thụt dầu 20 cái", "🍀 MAY MẮN: vỗ tay và nói cảm ơn", "🦵 Trung bình tấn 1 phút", 
         "🏃 Chạy 2 vòng sân", "🤸 Plank 1 phút", "🍀 MAY MẮN: đi bắt tay và nói cảm ơn",  
         "🤸 Plank 2 phút", "🌪️ Đá móc ngược mỗi chân 20 cái/chân", "🥋 Ép dẻo ngang 1 phút", 
-        "👊 Đấm thẳng 50 cái/tay", "🌪️ Đá vòng cầu mỗi chân 50 cái/chân", "🌪️ Đá vòng cầu mỗi chân 20 cái/chân", 
-        "🌪️ Đá chẻ mỗi chân 20 cái/chân", "🌪️ Đá chẻ mỗi chân 50 cái/chân", "🌪️ Đá ngang mỗi chân 20 cái/chân", 
-        "🌪️ Đá ngang mỗi chân 50 cái/chân", "🌪️ Đá bande mỗi chân 20 cái/chân", "🌪️ Đá số 4 mỗi chân 20 cái/chân",
-        "🍀 MAY MẮN: Ta tha cho đó!" 
+        "👊 Đấm thẳng 50 cái/tay", "🌪️ Đá vòng cầu mỗi chân 40 cái/chân", "🌪️ Đá vòng cầu mỗi chân 20 cái/chân", " 💃Nhảy 1 đoạn 20s"
+        "🌪️ Đá chẻ mỗi chân 20 cái/chân", "🌪️ Đá chẻ mỗi chân 40 cái/chân", "🌪️ Đá ngang mỗi chân 20 cái/chân", 
+        "🌪️ Đá ngang mỗi chân 40 cái/chân", "🌪️ Đá bande mỗi chân 10 cái/chân", "🌪️ Đá số 4 mỗi chân 10 cái/chân",
+        "🍀 MAY MẮN: lấy nước mời bạn uống!" 
     ];
 
     const amThanhTichTac = new Audio('https://www.myinstants.com/media/sounds/tick-tock.mp3'); amThanhTichTac.loop = true; 
@@ -385,7 +385,7 @@
 
     function tinhThoiGianPhat(text) {
         if (text.includes("2 phút")) return 120; if (text.includes("1 phút")) return 60;
-        if (text.includes("50 cái") || text.includes("2 vòng")) return 60; if (text.includes("20 cái")) return 40;
+        if (text.includes("40 cái") || text.includes("2 vòng")) return 60; if (text.includes("15 cái")) return 40;
         if (text.includes("10 cái") || text.includes("1 vòng")) return 30; return 45; 
     }
 
