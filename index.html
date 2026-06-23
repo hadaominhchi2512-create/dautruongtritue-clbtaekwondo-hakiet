@@ -322,7 +322,10 @@
         const maNhap = document.getElementById("ma-bao-mat").value;
         if(tenNguoiDung === "") { alert("Vui lòng nhập tên của em trước nhé!"); return; }
 
-        try { amThanhKihap.play().then(() => { amThanhKihap.pause(); amThanhKihap.currentTime = 0; }).catch(e=>{}); } catch(e){}
+        // THAY BẰNG ĐOẠN MỚI NÀY:
+	[amThanhKihap, amThanhVoTay, amThanhLeuLeu, amThanhChuongDongHo, amThanhTichTungGiay, amThanhBeVan, amThanhCoiTrongTai, amThanhTichTac].forEach(am => {
+    try { am.play().then(() => { am.pause(); am.currentTime = 0; }).catch(e => {}); } catch(err) {}
+});
 
         if(maNhap.trim().toUpperCase() === MAT_KHAU_CLB.toUpperCase()) {
             let btn = document.getElementById("btn-mo-cong"); let textGoc = btn.innerText;
@@ -548,7 +551,7 @@
         let cacNut = document.getElementById("dap-an").querySelectorAll('.ans-btn'); cacNut.forEach(n => n.disabled = true);
         if (dapAnDung) {
             nutDuocBam.style.background = "#2ed573"; diem += 10; chuoiThang++; document.getElementById("diem-chi-tiet").innerText = "⭐ Điểm: " + diem; capNhatHuyHieuDai(diem);
-            phatAmThanh(amThanhKihap); banPhaoHoa('nho'); capNhatCombo();
+            phatAmThanh(amThanhVoTay); banPhaoHoa('nho'); capNhatCombo();
         } else {
             nutDuocBam.style.background = "#ff4757"; phatAmThanh(amThanhLeuLeu); chuoiThang = 0; capNhatCombo();
             soLanSaiThiDau++; let mangHTML = ""; for(let i=0; i< (5 - soLanSaiThiDau); i++) mangHTML += "❤️"; for(let i=0; i< soLanSaiThiDau; i++) mangHTML += "🖤";
