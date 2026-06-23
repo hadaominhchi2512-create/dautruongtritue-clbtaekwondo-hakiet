@@ -20,6 +20,8 @@
         .mo-ta { color: #576574; font-size: 14px; margin-bottom: 20px; font-style: italic; font-weight: 500;}
         #thong-bao-tai { color: #ff9f43; font-weight: 700; font-size: 16px; animation: pulse 1s infinite alternate; }
         @keyframes pulse { from { opacity: 0.6; } to { opacity: 1; } }
+        /* CSS Hiệu ứng đập ván gỗ */
+        @keyframes breakBoard { 0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; } 50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; } 100% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; } }
 
         #ma-bao-mat, #ten-vo-sinh { padding: 15px; font-size: 18px; text-align: center; border-radius: 12px; border: 3px solid #ced6e0; outline: none; font-weight: 700; color: #2f3542; transition: 0.3s; font-family: 'Montserrat', sans-serif; box-sizing: border-box;}
         #ma-bao-mat { width: 100%; margin-bottom: 10px; } 
@@ -39,14 +41,13 @@
         .the-bai:active { transform: translateY(6px); box-shadow: 0 0 0 #1b52b8, 0 2px 5px rgba(0,0,0,0.2); }
         .the-bai:hover { filter: brightness(1.1); transform: scale(1.05); }
 
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        #diem { color: #2ed573; font-size: 20px; font-weight: 900; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap;}
         #so-mang-thi { font-size: 14px; letter-spacing: 2px; }
         #cau-dang-chon { color: #ff9f43; font-size: 14px; font-weight: 700; background: #fff3cd; padding: 5px 12px; border-radius: 15px; }
         #khu-vuc-dong-ho-thi { color: #ff4757; font-size: 20px; font-weight: 900; background: #ffeaa7; padding: 5px 15px; border-radius: 15px; border: 2px solid #fdcb6e; }
 
         .track { width: 100%; height: 35px; background-color: #8B4513; border-radius: 20px; position: relative; margin-bottom: 25px; box-shadow: inset 0 5px 10px rgba(0,0,0,0.4); }
-        .track::after { content: '🍌'; position: absolute; right: 2px; top: -2px; font-size: 30px; }
+        .track::after { content: '🥇'; position: absolute; right: 2px; top: -2px; font-size: 30px; }
         #monkey { position: absolute; left: 0%; top: -6px; font-size: 35px; transition: left 1s linear; z-index: 10; } 
         
         .question-box { background: #f1f2f6; padding: 15px; border-radius: 15px; font-size: 16px; color: #2f3542; margin-bottom: 20px; min-height: 80px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; border: 3px dashed #ced6e0; font-weight: 700; line-height: 1.5;}
@@ -83,11 +84,11 @@
         .modal-content { background: white; padding: 25px 20px; border-radius: 20px; width: 90%; max-width: 400px; position: relative; text-align: center; border: 5px solid #feca57; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transform: translateY(-50px); transition: 0.3s;}
         .modal-overlay.show .modal-content { transform: translateY(0); }
         .close-btn { position: absolute; top: 5px; right: 15px; background: none; border: none; font-size: 28px; cursor: pointer; color: #ff4757; font-weight: bold; padding: 0;}
-        .top-item { display: flex; justify-content: space-between; padding: 12px 10px; border-bottom: 1px dashed #dfe4ea; font-weight: 700; font-size: 16px; color: #2f3542;}
-        .top-1 { color: #ff9f43; font-size: 20px; background: #fff3cd; border-radius: 10px;}
-        .top-2 { color: #747d8c; font-size: 18px; background: #f1f2f6; border-radius: 10px;}
-        .top-3 { color: #cd6133; font-size: 18px; background: #ffebd3; border-radius: 10px;}
-        .rank-icon { display: inline-block; width: 30px; text-align: left; }
+        .top-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 10px; border-bottom: 1px dashed #dfe4ea; font-weight: 700; font-size: 16px; color: #2f3542;}
+        .top-1 { background: #fff3cd; border-radius: 10px; border: 2px solid #ff9f43;}
+        .top-2 { background: #f1f2f6; border-radius: 10px; border: 2px solid #a4b0be;}
+        .top-3 { background: #ffebd3; border-radius: 10px; border: 2px solid #e17055;}
+        .rank-icon { display: inline-block; width: 30px; text-align: left; font-size: 22px; }
     </style>
 </head>
 <body>
@@ -103,21 +104,21 @@
 
 <div class="game-board" id="man-hinh-chao-khoa">
     <button class="btn-am-thanh" onclick="chuyenDoiAmThanh()" id="icon-am-thanh0">🔊</button>
-    <img src="Logo.jpg" alt="Logo CLB" class="logo-clb">
+    <img src="Logo.jpg" alt="Logo CLB" class="logo-clb" onerror="this.src='https://cdn-icons-png.flaticon.com/512/8207/8207393.png'">
     <p class="loi-chao">Chào mừng bạn đến với</p>
     <h1 class="ten-clb">CLB TAEKWONDO HÀ KIỆT</h1>
     
     <div style="background: #f1f2f6; padding: 15px; border-radius: 15px; margin-bottom: 20px; border: 2px dashed #ced6e0;">
         <h2 class="tieu-de-game">⚔️ ĐẤU TRƯỜNG TRÍ TUỆ ⚔️</h2>
-        <p class="mo-ta" style="margin-bottom: 0;">Hệ thống ôn luyện kiến thức & phản xạ võ thuật</p>
+        <p class="mo-ta" style="margin-bottom: 0;">Hệ thống ôn luyện kiến thức & phản xạ kỹ năng</p>
     </div>
     
-    <p id="thong-bao-tai">⏳ Đang khởi động hệ thống...</p>
+    <p id="thong-bao-tai" style="display: none;">⏳ Đang khởi động hệ thống...</p>
     
-    <div id="khu-vuc-nhap-ma" style="display: none; padding: 0 10px;">
+    <div id="khu-vuc-nhap-ma" style="display: block; padding: 0 10px;">
         <input type="text" id="ten-vo-sinh" placeholder="Tên hoặc Biệt danh của em...">
         <input type="password" id="ma-bao-mat" placeholder="Mã Câu Lạc Bộ..." onkeypress="if(event.key === 'Enter') kiemTraMa()">
-        <button class="btn-ok" onclick="kiemTraMa()" style="width: 100%; margin-bottom: 10px;">MỞ CỔNG VÀO NGAY</button>
+        <button class="btn-ok" id="btn-mo-cong" onclick="kiemTraMa()" style="width: 100%; margin-bottom: 10px;">MỞ CỔNG VÀO NGAY</button>
         <button class="btn-ok" onclick="moBangXepHang()" style="width: 100%; background: #feca57; color: #2f3542; box-shadow: 0 4px 0 #e1b12c;">🏆 XEM BẢNG VINH DANH</button>
         <p id="sai-ma" style="color: #ff4757; display: none; font-weight: 900; margin-top: 10px;">❌ Mã bảo mật không chính xác!</p>
     </div>
@@ -135,7 +136,7 @@
     
     <button class="btn-ok btn-che-do" style="background: #ff4757; box-shadow: 0 4px 0 #c0392b;" onclick="chonCheDo('Thi Đấu')">
         ⏱ CHẾ ĐỘ THI ĐẤU
-        <span>(Giới hạn 2 phút - Bấm sai 5 lần là OUT - Chuyển siêu tốc)</span>
+        <span>(Giới hạn 2 phút - Bấm sai 5 lần là OUT)</span>
     </button>
 </div>
 
@@ -157,14 +158,20 @@
     <div id="khu-vuc-combo" style="display:none; color: #ff4757; font-weight: 900; font-size: 16px; margin-bottom: 10px; animation: pulse 0.5s infinite alternate; text-transform: uppercase;">🔥 Đang vào phom x3!</div>
 
     <div class="header">
-        <div id="diem-chi-tiet">⭐ Điểm: 0</div>
-        <div id="so-mang-thi" style="display:none;">❤️❤️❤️❤️❤️</div>
+        <div id="diem" style="display:flex; flex-direction:column; line-height: 1.3;">
+            <span id="diem-chi-tiet" style="font-size: 20px; color: #2ed573; font-weight: 900;">⭐ Điểm: 0</span>
+            <span id="cap-bac-dai" style="font-size: 13px; color: #576574; margin-top:2px; font-weight: bold;">Cấp: Đai Trắng 🤍</span>
+        </div>
+        <div id="so-mang-thi" style="display:none; margin: 0 10px;">❤️❤️❤️❤️❤️</div>
+        
+        <button id="btn-su-phu" class="btn-ok" style="display:none; background:#ff9f43; box-shadow:0 3px 0 #e1b12c; padding:8px 12px; font-size:12px; border-radius:8px;" onclick="suPhuCuuMang()">🆘 Sư Phụ Trợ Giúp</button>
+        
         <div id="cau-dang-chon" style="display:none;">Câu số: X</div> 
         <div id="khu-vuc-dong-ho-thi" style="display:none;">⏱ 02:00</div> 
     </div>
 
     <div class="track" id="khu-vuc-khi">
-        <div id="monkey">🐒</div>
+        <div id="monkey">🥷</div>
     </div>
 
     <div class="question-box" id="cau-hoi">Đang chuẩn bị...</div>
@@ -178,7 +185,9 @@
     // ==========================================
 
     let tenNguoiDung = ""; let cheDoHienTai = ""; let amThanhBat = true; let chuoiThang = 0; 
-    let daXuLyKetQua = false; // CHỐT CHẶN CHỐNG GHI TRÙNG DỮ LIỆU ĐẦU RA
+    let daXuLyKetQua = false; 
+    let suPhuDaDung = false; 
+    let duLieuDaTai = false; 
 
     const danhSachHinhPhat = [
         "💪 Hít đất 10 cái", "🍀 MAY MẮN: ôm từng người và nói cảm ơn", "🐸 Bật cóc 1 vòng", 
@@ -196,9 +205,44 @@
     const amThanhLeuLeu = new Audio('https://www.myinstants.com/media/sounds/nelson_haha.mp3');
     const amThanhChuongDongHo = new Audio('https://www.myinstants.com/media/sounds/boxing-bell.mp3');
     const amThanhTichTungGiay = new Audio('https://www.myinstants.com/media/sounds/tick-sound.mp3'); 
+    const amThanhKihap = new Audio('https://www.myinstants.com/media/sounds/karate-chop.mp3');
+    const amThanhBeVan = new Audio('https://www.myinstants.com/media/sounds/punch.mp3');
+    const amThanhCoiTrongTai = new Audio('https://www.myinstants.com/media/sounds/referee-whistle.mp3');
 
     let khoDuLieu = []; let diem = 0; let mangSoDaChoi = []; let giayDaTroiQua = 0;
     const thoiGianToiDaLT = 15; let dongHoLT; let dongHoHinhPhat; let thoiGianThi = 120; let dongHoThi; let soLanSaiThiDau = 0; 
+
+    // --- HÀM MỚI: ĐỌC GIỌNG NỮ ÁP LỰC CAO ---
+    function docGiongNu(vanBan) {
+        if (!amThanhBat || !('speechSynthesis' in window)) return;
+        window.speechSynthesis.cancel(); // Dập tắt giọng đang đọc dở để đọc số mới
+        let msg = new SpeechSynthesisUtterance(vanBan);
+        msg.lang = 'vi-VN';
+        msg.volume = 1.5; // Âm lượng max
+        msg.rate = 2; // Đọc nhanh, dứt khoát
+        msg.pitch = 2.5; // Tone cao giọng nữ
+        window.speechSynthesis.speak(msg);
+    }
+
+    function capNhatHuyHieuDai(diemHienTai) {
+        let textDai = "";
+        if (diemHienTai < 30) textDai = "Đai Trắng 🤍";
+        else if (diemHienTai < 60) textDai = "Đai Vàng 💛";
+        else if (diemHienTai < 100) textDai = "Đai Xanh Lá 💚";
+        else if (diemHienTai < 150) textDai = "Đai Xanh Dương 💙";
+        else if (diemHienTai < 200) textDai = "Đai Đỏ ❤️";
+        else textDai = "Đai Đen 🖤";
+        document.getElementById("cap-bac-dai").innerText = "Cấp: " + textDai;
+    }
+
+    function hieuUngBeVan() {
+        let overlay = document.createElement("div");
+        overlay.innerHTML = "🪵💥";
+        overlay.style = "position:fixed; top:40%; left:50%; transform:translate(-50%, -50%); font-size:120px; z-index:9999; animation: breakBoard 0.6s forwards;";
+        document.body.appendChild(overlay);
+        phatAmThanh(amThanhBeVan);
+        setTimeout(() => overlay.remove(), 600);
+    }
 
     function banPhaoHoa(loai) {
         if(loai === 'nho') confetti({ particleCount: 60, spread: 60, origin: { y: 0.6 }, colors: ['#ff4757', '#1e90ff', '#2ed573', '#feca57'], zIndex: 100 });
@@ -212,160 +256,100 @@
         }
     }
 
-    // =========================================================================
-    // HÀM BÓC TÁCH CHI TIẾT THIẾT BỊ NGƯỜI DÙNG (MỚI THÊM)
-    // =========================================================================
     function bocTachChiTietThietBiNguoiDung() {
-        let ua = navigator.userAgent;
-        let heDieuHanh = "Không rõ OS";
-        let ungDungMoLink = "Trình duyệt chuẩn";
-
-        if (ua.indexOf("Android") > -1) {
-            let matches = ua.match(/Android\s([0-9\.]+)/);
-            heDieuHanh = matches ? "Android " + matches[1] : "Android";
-            let modelMatches = ua.match(/;\s([^;]+)\sBuild/);
-            if (modelMatches) heDieuHanh += " (" + modelMatches[1] + ")";
-        } else if (ua.indexOf("iPhone") > -1) {
-            let matches = ua.match(/OS\s([0-9\_]+)/);
-            heDieuHanh = matches ? "iPhone (iOS " + matches[1].replace(/_/g, '.') + ")" : "iPhone";
-        } else if (ua.indexOf("iPad") > -1) {
-            let matches = ua.match(/OS\s([0-9\_]+)/);
-            heDieuHanh = matches ? "iPad (iOS " + matches[1].replace(/_/g, '.') + ")" : "iPad";
-        } else if (ua.indexOf("Windows NT") > -1) {
-            let matches = ua.match(/Windows NT\s([0-9\.]+)/);
-            if (matches) {
-                if (matches[1] === "10.0") heDieuHanh = "Windows 10/11 PC";
-                else if (matches[1] === "6.1") heDieuHanh = "Windows 7 PC";
-                else heDieuHanh = "Windows PC " + matches[1];
-            }
-        } else if (ua.indexOf("Mac") > -1) {
-            heDieuHanh = "MacOS Máy tính";
-        }
-
-        if (ua.indexOf("Zalo") > -1) ungDungMoLink = "Zalo App";
-        else if (ua.indexOf("FBAN") > -1 || ua.indexOf("FBAV") > -1) ungDungMoLink = "Facebook App";
-        else if (ua.indexOf("Edg") > -1) ungDungMoLink = "Trình duyệt Edge";
-        else if (ua.indexOf("Chrome") > -1) ungDungMoLink = "Trình duyệt Chrome";
-        else if (ua.indexOf("Safari") > -1) ungDungMoLink = "Trình duyệt Safari";
-
+        let ua = navigator.userAgent; let heDieuHanh = "Không rõ OS"; let ungDungMoLink = "Trình duyệt chuẩn";
+        if (ua.indexOf("Android") > -1) { let matches = ua.match(/Android\s([0-9\.]+)/); heDieuHanh = matches ? "Android " + matches[1] : "Android"; let modelMatches = ua.match(/;\s([^;]+)\sBuild/); if (modelMatches) heDieuHanh += " (" + modelMatches[1] + ")";
+        } else if (ua.indexOf("iPhone") > -1) { let matches = ua.match(/OS\s([0-9\_]+)/); heDieuHanh = matches ? "iPhone (iOS " + matches[1].replace(/_/g, '.') + ")" : "iPhone";
+        } else if (ua.indexOf("iPad") > -1) { let matches = ua.match(/OS\s([0-9\_]+)/); heDieuHanh = matches ? "iPad (iOS " + matches[1].replace(/_/g, '.') + ")" : "iPad";
+        } else if (ua.indexOf("Windows NT") > -1) { let matches = ua.match(/Windows NT\s([0-9\.]+)/); if (matches) { if (matches[1] === "10.0") heDieuHanh = "Windows 10/11 PC"; else if (matches[1] === "6.1") heDieuHanh = "Windows 7 PC"; else heDieuHanh = "Windows PC " + matches[1]; }
+        } else if (ua.indexOf("Mac") > -1) { heDieuHanh = "MacOS Máy tính"; }
+        if (ua.indexOf("Zalo") > -1) ungDungMoLink = "Zalo App"; else if (ua.indexOf("FBAN") > -1 || ua.indexOf("FBAV") > -1) ungDungMoLink = "Facebook App"; else if (ua.indexOf("Edg") > -1) ungDungMoLink = "Trình duyệt Edge"; else if (ua.indexOf("Chrome") > -1) ungDungMoLink = "Trình duyệt Chrome"; else if (ua.indexOf("Safari") > -1) ungDungMoLink = "Trình duyệt Safari";
         return heDieuHanh + " | " + ungDungMoLink;
     }
 
-    // --- HÀM MỞ BẢNG XẾP HẠNG & CAMERA AN NINH TEXT ---
     async function moBangXepHang() {
-        let urlXemBXH = API_URL + "?action=cameraAnNinh&hanhDong=" + encodeURIComponent("Mở xem Bảng Vinh Danh rồi thoát") 
-                        + "&ip=" + encodeURIComponent(window.myIp || "") 
-                        + "&deviceShort=" + encodeURIComponent(window.myDeviceShort || "")
-                        + "&deviceRaw=" + encodeURIComponent(window.myDeviceRaw || "");
+        let urlXemBXH = API_URL + "?action=cameraAnNinh&hanhDong=" + encodeURIComponent("Mở xem Bảng Vinh Danh rồi thoát") + "&ip=" + encodeURIComponent(window.myIp || "") + "&deviceShort=" + encodeURIComponent(window.myDeviceShort || "") + "&deviceRaw=" + encodeURIComponent(window.myDeviceRaw || "");
         fetch(urlXemBXH, { method: 'GET', keepalive: true }).catch(e => console.log(e));
-
-        document.getElementById("modal-bxh").classList.add("show");
-        document.getElementById("noi-dung-bxh").innerHTML = "⏳ Đang tải dữ liệu từ Bảng Vinh Danh...";
+        document.getElementById("modal-bxh").classList.add("show"); document.getElementById("noi-dung-bxh").innerHTML = "⏳ Đang tải dữ liệu từ Bảng Vinh Danh...";
         try {
             let res = await fetch(API_URL + "?action=layBangXepHang"); let data = await res.json();
             if(data.length === 0) { document.getElementById("noi-dung-bxh").innerHTML = "Chưa có võ sinh nào được vinh danh!"; return; }
             let html = "";
             data.forEach((user, idx) => {
-                let rankClass = idx === 0 ? 'top-1' : (idx === 1 ? 'top-2' : (idx === 2 ? 'top-3' : ''));
+                let rankClass = idx === 0 ? 'top-1' : (idx <= 2 ? 'top-2' : 'top-3');
                 let icon = idx === 0 ? '🥇' : (idx === 1 ? '🥈' : (idx === 2 ? '🥉' : `<span style="display:inline-block; width:20px; text-align:center;">${idx+1}</span>`));
-                html += `<div class="top-item ${rankClass}"><span><span class="rank-icon">${icon}</span> ${user.ten}</span><span style="color:#2ed573;">${user.diem}⭐</span></div>`;
+                let danhHieu = idx === 0 ? "Học Bá Đấu Trường" : (idx <= 2 ? "Tinh Anh Lý Thuyết" : "Chiến Binh Trắc Nghiệm");
+                html += `<div class="top-item ${rankClass}"><div style="text-align:left; line-height:1.4;"><span class="rank-icon">${icon}</span> <span style="font-weight:900; font-size:18px;">${user.ten}</span><br><span style="font-size:12px; font-weight:700; color:#576574; margin-left:35px; text-transform:uppercase;">${danhHieu}</span></div><div style="color:#2ed573; font-weight:900; font-size:18px;">${user.diem}⭐</div></div>`;
             });
             document.getElementById("noi-dung-bxh").innerHTML = html;
         } catch(e) { document.getElementById("noi-dung-bxh").innerHTML = "❌ Lỗi kết nối mạng!"; }
     }
     function dongBangXepHang() { document.getElementById("modal-bxh").classList.remove("show"); }
 
-    function xaoTronMang(mang) {
-        let m = [...mang];
-        for (let i = m.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [m[i], m[j]] = [m[j], m[i]]; }
-        return m;
-    }
+    function xaoTronMang(mang) { let m = [...mang]; for (let i = m.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [m[i], m[j]] = [m[j], m[i]]; } return m; }
 
     function chuyenDoiAmThanh() {
         amThanhBat = !amThanhBat;
-        document.getElementById("icon-am-thanh0").innerText = amThanhBat ? "🔊" : "🔇";
-        document.getElementById("icon-am-thanh1").innerText = amThanhBat ? "🔊" : "🔇";
-        document.getElementById("icon-am-thanh2").innerText = amThanhBat ? "🔊" : "🔇";
-        document.getElementById("icon-am-thanh3").innerText = amThanhBat ? "🔊" : "🔇";
-        if(!amThanhBat) tatTichTac();
+        document.getElementById("icon-am-thanh0").innerText = amThanhBat ? "🔊" : "🔇"; document.getElementById("icon-am-thanh1").innerText = amThanhBat ? "🔊" : "🔇"; document.getElementById("icon-am-thanh2").innerText = amThanhBat ? "🔊" : "🔇"; document.getElementById("icon-am-thanh3").innerText = amThanhBat ? "🔊" : "🔇";
+        if(!amThanhBat) { tatTichTac(); if('speechSynthesis' in window) window.speechSynthesis.cancel(); }
     }
-    function phatAmThanh(am) { if(amThanhBat) { am.currentTime = 0; am.play().catch(e => console.log(e)); } }
+    
+    function phatAmThanh(am) { if(amThanhBat) { try { am.currentTime = 0; am.play().catch(e => {}); } catch(err){} } }
     function tatTichTac() { amThanhTichTac.pause(); amThanhTichTac.currentTime = 0; }
     function formatThoiGian(giay) { let p = Math.floor(giay / 60); let s = giay % 60; return `0${p}:${s < 10 ? '0'+s : s}`; }
 
-    // --- KHỞI ĐỘNG TRANG & LƯU VẾT "ĐỨNG TRƯỚC CỬA" ---
     window.onload = async function() {
-        taiDuLieu(); 
-        
-        // Cập nhật 2 loại chuỗi thông tin thiết bị
-        window.myDeviceRaw = navigator.userAgent;
-        window.myDeviceShort = bocTachChiTietThietBiNguoiDung();
-        window.myIp = "Đang quét IP...";
-
-        try {
-            let res = await fetch('https://api.ipify.org?format=json');
-            let dataIp = await res.json();
-            window.myIp = dataIp.ip;
-        } catch (e) {
-            window.myIp = "Không rõ IP";
-        }
-
-        let urlDungCua = API_URL + "?action=cameraAnNinh&hanhDong=" + encodeURIComponent("Đứng trước cửa Web (Vừa mở Link)") 
-                         + "&ip=" + encodeURIComponent(window.myIp) 
-                         + "&deviceShort=" + encodeURIComponent(window.myDeviceShort)
-                         + "&deviceRaw=" + encodeURIComponent(window.myDeviceRaw);
-                         
+        taiDuLieuNgam(); 
+        window.myDeviceRaw = navigator.userAgent; window.myDeviceShort = bocTachChiTietThietBiNguoiDung(); window.myIp = "Đang quét IP...";
+        try { let res = await fetch('https://api.ipify.org?format=json'); let dataIp = await res.json(); window.myIp = dataIp.ip; } catch (e) { window.myIp = "Không rõ IP"; }
+        let urlDungCua = API_URL + "?action=cameraAnNinh&hanhDong=" + encodeURIComponent("Đứng trước cửa Web (Vừa mở Link)") + "&ip=" + encodeURIComponent(window.myIp) + "&deviceShort=" + encodeURIComponent(window.myDeviceShort) + "&deviceRaw=" + encodeURIComponent(window.myDeviceRaw);
         fetch(urlDungCua, { method: 'GET', keepalive: true }).catch(e => console.log(e));
     };
 
-    async function taiDuLieu() {
+    async function taiDuLieuNgam() {
         try {
-            const response = await fetch(API_URL);
-            let duLieuTho = await response.json();
-            if(duLieuTho.length > 0) {
-                khoDuLieu = xaoTronMang(duLieuTho); 
-                document.getElementById("thong-bao-tai").style.display = "none";
-                document.getElementById("khu-vuc-nhap-ma").style.display = "block";
-            } else { document.getElementById("thong-bao-tai").innerText = "⚠️ Chưa có câu hỏi nào!"; }
-        } catch (error) { document.getElementById("thong-bao-tai").innerText = "❌ Lỗi kết nối Google Sheets."; }
+            const response = await fetch(API_URL); let textResponse = await response.text();
+            try {
+                let duLieuTho = JSON.parse(textResponse);
+                if(duLieuTho.length > 0) { khoDuLieu = xaoTronMang(duLieuTho); duLieuDaTai = true; } 
+                else { duLieuDaTai = true; document.getElementById("sai-ma").innerText = "⚠️ Chưa có câu hỏi nào!"; document.getElementById("sai-ma").style.display = "block"; }
+            } catch(e) { document.getElementById("sai-ma").innerHTML = "❌ Lỗi kết nối CSDL (Code.gs)."; document.getElementById("sai-ma").style.display = "block"; }
+        } catch (error) { document.getElementById("sai-ma").innerHTML = "❌ Lỗi mạng: Không thể tải câu hỏi."; document.getElementById("sai-ma").style.display = "block"; }
     }
 
-    // --- KIỂM TRA MÃ BẢO MẬT VÀ GHI LOG KẺ GIAN ---
     async function kiemTraMa() {
         tenNguoiDung = document.getElementById("ten-vo-sinh").value.trim();
         const maNhap = document.getElementById("ma-bao-mat").value;
         if(tenNguoiDung === "") { alert("Vui lòng nhập tên của em trước nhé!"); return; }
 
+        try { amThanhKihap.play().then(() => { amThanhKihap.pause(); amThanhKihap.currentTime = 0; }).catch(e=>{}); } catch(e){}
+
         if(maNhap.trim().toUpperCase() === MAT_KHAU_CLB.toUpperCase()) {
-            let urlGhiDanh = API_URL + "?action=ghiDanh" 
-                             + "&ten=" + encodeURIComponent(tenNguoiDung) 
-                             + "&ip=" + encodeURIComponent(window.myIp || "Không rõ") 
-                             + "&deviceShort=" + encodeURIComponent(window.myDeviceShort || "Không rõ")
-                             + "&deviceRaw=" + encodeURIComponent(window.myDeviceRaw || navigator.userAgent);
+            let btn = document.getElementById("btn-mo-cong"); let textGoc = btn.innerText;
+            if (!duLieuDaTai || khoDuLieu.length === 0) {
+                btn.innerText = "⏳ ĐANG KẾT NỐI MÁY CHỦ..."; btn.disabled = true;
+                await new Promise(resolve => { let kiemTra = setInterval(() => { if(duLieuDaTai) { clearInterval(kiemTra); resolve(); } }, 500); });
+                btn.innerText = textGoc; btn.disabled = false; if (khoDuLieu.length === 0) return; 
+            }
+
+            let urlGhiDanh = API_URL + "?action=ghiDanh&ten=" + encodeURIComponent(tenNguoiDung) + "&ip=" + encodeURIComponent(window.myIp || "Không rõ") + "&deviceShort=" + encodeURIComponent(window.myDeviceShort || "Không rõ") + "&deviceRaw=" + encodeURIComponent(window.myDeviceRaw || navigator.userAgent);
             fetch(urlGhiDanh);
 
             document.getElementById("man-hinh-chao-khoa").style.display = "none";
             document.getElementById("man-hinh-chon-che-do").style.display = "block";
             document.getElementById("ten-hien-thi-che-do").innerText = "Võ sinh: " + tenNguoiDung;
         } else {
-            let urlNhapSai = API_URL + "?action=cameraAnNinh"
-                             + "&hanhDong=" + encodeURIComponent("Nhập sai mã bảo mật") 
-                             + "&ten=" + encodeURIComponent(tenNguoiDung) 
-                             + "&maSai=" + encodeURIComponent(maNhap)
-                             + "&ip=" + encodeURIComponent(window.myIp || "") 
-                             + "&deviceShort=" + encodeURIComponent(window.myDeviceShort || "")
-                             + "&deviceRaw=" + encodeURIComponent(window.myDeviceRaw || navigator.userAgent);
+            let urlNhapSai = API_URL + "?action=cameraAnNinh&hanhDong=" + encodeURIComponent("Nhập sai mã bảo mật") + "&ten=" + encodeURIComponent(tenNguoiDung) + "&maSai=" + encodeURIComponent(maNhap) + "&ip=" + encodeURIComponent(window.myIp || "") + "&deviceShort=" + encodeURIComponent(window.myDeviceShort || "") + "&deviceRaw=" + encodeURIComponent(window.myDeviceRaw || navigator.userAgent);
             fetch(urlNhapSai, { method: 'GET', keepalive: true }).catch(e => console.log(e));
-
-            document.getElementById("sai-ma").style.display = "block";
-            document.getElementById("ma-bao-mat").value = ""; 
+            document.getElementById("sai-ma").style.display = "block"; document.getElementById("ma-bao-mat").value = ""; 
         }
     }
 
     function chonCheDo(cheDo) {
         cheDoHienTai = cheDo; document.getElementById("man-hinh-chon-che-do").style.display = "none";
-        diem = 0; mangSoDaChoi = []; chuoiThang = 0;
-        daXuLyKetQua = false; // MỞ KHÓA CHỐT SẴN SÀNG CHO VÁN MỚI
+        diem = 0; mangSoDaChoi = []; chuoiThang = 0; suPhuDaDung = false; daXuLyKetQua = false; capNhatHuyHieuDai(0);
+        if('speechSynthesis' in window) window.speechSynthesis.cancel(); // Xóa giọng đọc bị kẹt
+
         if(cheDo === 'Luyện Tập') {
             document.getElementById("man-hinh-chon-the").style.display = "block";
             document.getElementById("ten-hien-thi-luyen-tap").innerText = "Võ sinh: " + tenNguoiDung;
@@ -373,7 +357,6 @@
         } else batDauThiDau();
     }
 
-    /* === CHẾ ĐỘ LUYỆN TẬP === */
     function taoLuoiTheBai() {
         const khuVucThe = document.getElementById("khu-vuc-the-bai"); khuVucThe.innerHTML = ""; 
         for(let i = 1; i <= 9; i++) {
@@ -385,8 +368,7 @@
     function xuLyChonThe(theHTML) {
         theHTML.style.transform = "scale(0.9)";
         setTimeout(() => {
-            theHTML.style.transform = "none";
-            let indexCauHoi = layCauHoiChuaChoi();
+            theHTML.style.transform = "none"; let indexCauHoi = layCauHoiChuaChoi();
             if(indexCauHoi === -1) { alert("Tuyệt đỉnh! Em đã trả lời hết sạch kho dữ liệu!"); return; }
             moCauHoiLuyenTap(indexCauHoi);
         }, 150);
@@ -396,6 +378,7 @@
         mangSoDaChoi.push(indexCau); document.getElementById("man-hinh-chon-the").style.display = "none";
         document.getElementById("man-hinh-game").style.display = "block"; document.getElementById("khu-vuc-khi").style.display = "block"; 
         document.getElementById("khu-vuc-dong-ho-thi").style.display = "none"; document.getElementById("so-mang-thi").style.display = "none"; 
+        document.getElementById("btn-su-phu").style.display = "none";
         document.getElementById("khu-vuc-combo").style.display = "none"; document.getElementById("diem-chi-tiet").innerText = "⭐ Điểm: " + diem;
         batDauChoKhiChayLT(); hienThiGiaoDienCauHoi(indexCau, xuLyTraLoiLuyenTap);
     }
@@ -405,16 +388,15 @@
         clearInterval(dongHoLT); tatTichTac(); phatAmThanh(amThanhTichTac);
         dongHoLT = setInterval(() => {
             giayDaTroiQua++; document.getElementById("monkey").style.left = ((giayDaTroiQua / thoiGianToiDaLT) * 88) + "%";
-            if (giayDaTroiQua >= thoiGianToiDaLT) {
-                clearInterval(dongHoLT); tatTichTac(); phatAmThanh(amThanhLeuLeu); hienThiKetQuaLuyenTap(false, "⏰ Hết giờ!");
-            }
+            if (giayDaTroiQua >= thoiGianToiDaLT) { clearInterval(dongHoLT); tatTichTac(); phatAmThanh(amThanhLeuLeu); hienThiKetQuaLuyenTap(false, "⏰ Hết giờ!"); }
         }, 1000); 
     }
 
     function xuLyTraLoiLuyenTap(dapAnDung) {
+        let cacNut = document.getElementById("dap-an").querySelectorAll('.ans-btn'); cacNut.forEach(n => n.disabled = true);
         clearInterval(dongHoLT); tatTichTac(); 
         if (dapAnDung) {
-            diem += 10; document.getElementById("diem-chi-tiet").innerText = "⭐ Điểm: " + diem;
+            diem += 10; document.getElementById("diem-chi-tiet").innerText = "⭐ Điểm: " + diem; capNhatHuyHieuDai(diem);
             document.getElementById("diem-tong").innerText = "⭐ Tổng Điểm: " + diem;
             phatAmThanh(amThanhVoTay); banPhaoHoa('nho'); hienThiKetQuaLuyenTap(true, "🎉 Chính xác!");
         } else { phatAmThanh(amThanhLeuLeu); hienThiKetQuaLuyenTap(false, "Rất tiếc! Sai rồi."); }
@@ -429,12 +411,10 @@
         for(let i=1; i<=3; i++) htmlKetQua += `<div class="the-phat" onclick="latThePhat(this, ${laDung})">❓</div>`;
         htmlKetQua += `</div><div id="ket-qua-phat" style="display:none; font-size: 18px; font-weight: 900; margin-top: 15px; padding: 15px; border-radius: 10px; line-height: 1.4;"></div>`;
 
-        document.getElementById("cau-hoi").innerHTML = htmlKetQua;
-        let btnHTML = "";
+        document.getElementById("cau-hoi").innerHTML = htmlKetQua; let btnHTML = "";
         if (laDung) btnHTML += `<button id="btn-bo-qua" class="btn-bo-qua" onclick="boQuaPhat()">😇 BỎ QUYỀN PHẠT</button>`;
         btnHTML += `<button id="btn-tiep-theo" class="btn-full" style="display:none;" onclick="quayVeManHinhChonThe()">🔙 Lật Thẻ Tiếp Theo</button>`;
         document.getElementById("dap-an").innerHTML = btnHTML;
-
         if(laDung && (diem === 30 || diem === 50 || diem === 100)) setTimeout(() => banPhaoHoa('to'), 500);
     }
 
@@ -453,8 +433,7 @@
             ketQuaBox.style.background = "#e5f8ed"; ketQuaBox.style.border = "2px dashed #2ed573";
             let txt = laDung ? "(Đối thủ may mắn thoát nạn thể lực)" : "(Bạn đã được miễn phạt thể lực)";
             ketQuaBox.innerHTML = `QUẺ XĂM ĐẠI CÁT:<br> <span style="color:#2ed573; font-size: 22px;">${phatNgauNhien}</span><br><span style="color:#2f3542; font-size: 15px;">${txt}</span>`;
-            document.getElementById("btn-tiep-theo").style.display = "block";
-            let btnBoQua = document.getElementById("btn-bo-qua"); if(btnBoQua) btnBoQua.style.display = "none";
+            document.getElementById("btn-tiep-theo").style.display = "block"; let btnBoQua = document.getElementById("btn-bo-qua"); if(btnBoQua) btnBoQua.style.display = "none";
         } else {
             ketQuaBox.style.background = "#ffeaa7"; ketQuaBox.style.border = "2px dashed #fdcb6e"; ketQuaBox.style.color = "#ff4757";
             let txt = laDung ? "ĐỐI THỦ BỊ PHẠT" : "BẠN BỊ PHẠT"; let thoiGian = tinhThoiGianPhat(phatNgauNhien);
@@ -463,11 +442,11 @@
                     <div id="dong-ho-phat" style="font-size: 30px; font-weight: 900; color: #d63031; margin-bottom: 10px;">⏱ ${formatThoiGian(thoiGian)}</div>
                     <button class="btn-ok" id="btn-bat-dau-phat" onclick="batDauDongHoPhat(${thoiGian})" style="background: #e17055; width: 100%; box-shadow: 0 4px 0 #d63031;">🔥 BẮT ĐẦU CHỊU PHẠT</button>
                 </div>`;
-            document.getElementById("btn-tiep-theo").style.display = "none";
-            let btnBoQua = document.getElementById("btn-bo-qua"); if(btnBoQua) btnBoQua.style.display = "none";
+            document.getElementById("btn-tiep-theo").style.display = "none"; let btnBoQua = document.getElementById("btn-bo-qua"); if(btnBoQua) btnBoQua.style.display = "none";
         }
     }
 
+    // --- TÍCH HỢP GIỌNG ĐỌC ÁP LỰC VÀO THỜI GIAN PHẠT ---
     function batDauDongHoPhat(giay) {
         document.getElementById("btn-bat-dau-phat").style.display = "none"; let time = giay;
         let dh = document.getElementById("dong-ho-phat"); dh.innerText = `⏱ ${formatThoiGian(time)}`;
@@ -477,14 +456,18 @@
         dongHoHinhPhat = setInterval(() => {
             time--; dh.innerText = `⏱ ${formatThoiGian(time)}`;
             if (time > 0 && amThanhBat) { amThanhTichTungGiay.currentTime = 0; amThanhTichTungGiay.play().catch(e=>console.log(e)); }
+            
             if (time === 15) {
-                if (amThanhBat && 'speechSynthesis' in window) {
-                    let msg = new SpeechSynthesisUtterance("Còn 15 giây"); msg.lang = 'vi-VN'; window.speechSynthesis.speak(msg);
-                }
+                docGiongNu("Còn mười lăm giây");
                 dh.style.animation = "pulse 0.5s infinite alternate"; dh.style.color = "#ff9f43"; 
             }
+            if (time <= 10 && time > 0) {
+                docGiongNu(time.toString());
+            }
+
             if(time <= 0) {
                 clearInterval(dongHoHinhPhat); tatTichTac(); dh.style.animation = "none"; dh.innerText = "🎉 ĐÃ HOÀN THÀNH PHẠT!"; dh.style.color = "#2ed573";
+                docGiongNu("Hết giờ");
                 phatAmThanh(amThanhVoTay); document.getElementById("btn-tiep-theo").style.display = "block";
             }
         }, 1000);
@@ -492,30 +475,48 @@
 
     function boQuaPhat() {
         document.getElementById("khu-vuc-the-phat").style.display = "none"; let ketQuaBox = document.getElementById("ket-qua-phat");
-        ketQuaBox.style.display = "block"; ketQuaBox.innerHTML = "Tuyệt vời! Bạn đã bác ái bỏ qua hình phạt 😇";
-        ketQuaBox.style.color = "#2ed573"; ketQuaBox.style.borderColor = "#2ed573"; ketQuaBox.style.background = "#e5f8ed";
+        ketQuaBox.style.display = "block"; ketQuaBox.innerHTML = "Tuyệt vời! Bạn đã bác ái bỏ qua hình phạt 😇"; ketQuaBox.style.color = "#2ed573"; ketQuaBox.style.borderColor = "#2ed573"; ketQuaBox.style.background = "#e5f8ed";
         document.getElementById("btn-bo-qua").style.display = "none"; document.getElementById("btn-tiep-theo").style.display = "block";
     }
 
     function quayVeManHinhChonThe() {
-        clearInterval(dongHoHinhPhat); tatTichTac(); document.getElementById("btn-luu-diem-luyen-tap").style.display = "block"; 
-        document.getElementById("man-hinh-game").style.display = "none"; document.getElementById("man-hinh-chon-the").style.display = "block";
+        clearInterval(dongHoHinhPhat); tatTichTac(); if('speechSynthesis' in window) window.speechSynthesis.cancel();
+        document.getElementById("btn-luu-diem-luyen-tap").style.display = "block"; document.getElementById("man-hinh-game").style.display = "none"; document.getElementById("man-hinh-chon-the").style.display = "block";
     }
 
     /* === CHẾ ĐỘ THI ĐẤU === */
     function batDauThiDau() {
         document.getElementById("man-hinh-game").style.display = "block"; document.getElementById("khu-vuc-khi").style.display = "none"; 
         document.getElementById("khu-vuc-dong-ho-thi").style.display = "block"; 
-        diem = 0; thoiGianThi = 120; mangSoDaChoi = []; soLanSaiThiDau = 0; chuoiThang = 0;
+        diem = 0; thoiGianThi = 120; mangSoDaChoi = []; soLanSaiThiDau = 0; chuoiThang = 0; suPhuDaDung = false; capNhatHuyHieuDai(diem);
+        
         document.getElementById("so-mang-thi").style.display = "block"; document.getElementById("so-mang-thi").innerText = "❤️❤️❤️❤️❤️";
+        document.getElementById("btn-su-phu").style.display = "block";
         document.getElementById("diem-chi-tiet").innerText = "⭐ Điểm: 0"; document.getElementById("khu-vuc-dong-ho-thi").innerText = "⏱ 02:00";
         document.getElementById("khu-vuc-combo").style.display = "none";
+        document.getElementById("cau-dang-chon").style.display = "none";
+        
         phatAmThanh(amThanhTichTac); dongHoThi = setInterval(demNguocThi, 1000); chuyenCauHoiThi();
     }
 
+    // --- TÍCH HỢP GIỌNG ĐỌC ÁP LỰC VÀO THI ĐẤU ---
     function demNguocThi() {
         thoiGianThi--; document.getElementById("khu-vuc-dong-ho-thi").innerText = `⏱ ${formatThoiGian(thoiGianThi)}`;
-        if (thoiGianThi <= 0) { clearInterval(dongHoThi); tatTichTac(); ketThucThiDau(false, false); }
+        
+        if (thoiGianThi === 15) {
+            docGiongNu("Còn mười lăm giây");
+            document.getElementById("khu-vuc-dong-ho-thi").style.animation = "pulse 0.5s infinite alternate"; 
+        }
+        if (thoiGianThi <= 10 && thoiGianThi > 0) {
+            docGiongNu(thoiGianThi.toString());
+        }
+
+        if (thoiGianThi <= 0) { 
+            clearInterval(dongHoThi); tatTichTac(); 
+            document.getElementById("khu-vuc-dong-ho-thi").style.animation = "none";
+            docGiongNu("Hết giờ");
+            phatAmThanh(amThanhCoiTrongTai); ketThucThiDau(false, false); 
+        }
     }
 
     function chuyenCauHoiThi() {
@@ -529,133 +530,95 @@
         let boxCombo = document.getElementById("khu-vuc-combo");
         if(chuoiThang >= 3) {
             boxCombo.style.display = "block";
+            if (chuoiThang === 3 || chuoiThang === 5 || chuoiThang === 10) hieuUngBeVan();
             if(chuoiThang >= 10) boxCombo.innerHTML = `🔥 Thần thánh! Chuỗi x${chuoiThang} 🔥`;
             else if(chuoiThang >= 5) boxCombo.innerHTML = `⚡ Không thể cản bước! Chuỗi x${chuoiThang}`;
             else boxCombo.innerHTML = `🔥 Đang vào phom! Chuỗi x${chuoiThang}`;
         } else boxCombo.style.display = "none";
     }
 
+    function suPhuCuuMang() {
+        if(suPhuDaDung) return; suPhuDaDung = true; document.getElementById("btn-su-phu").style.display = "none";
+        alert("👨‍🏫 Sư phụ truyền nội công: Đã loại bỏ giúp em 2 đáp án sai!");
+        let cacNut = document.getElementById("dap-an").querySelectorAll('.ans-btn'); let daXoa = 0;
+        cacNut.forEach(nut => { if (nut.dataset.dung === "false" && daXoa < 2) { nut.style.visibility = "hidden"; daXoa++; } });
+    }
+
     function xuLyTraLoiThiDau(dapAnDung, nutDuocBam) {
         let cacNut = document.getElementById("dap-an").querySelectorAll('.ans-btn'); cacNut.forEach(n => n.disabled = true);
         if (dapAnDung) {
-            nutDuocBam.style.background = "#2ed573"; diem += 10; chuoiThang++;
-            document.getElementById("diem-chi-tiet").innerText = "⭐ Điểm: " + diem;
-            phatAmThanh(amThanhVoTay); banPhaoHoa('nho'); capNhatCombo();
+            nutDuocBam.style.background = "#2ed573"; diem += 10; chuoiThang++; document.getElementById("diem-chi-tiet").innerText = "⭐ Điểm: " + diem; capNhatHuyHieuDai(diem);
+            phatAmThanh(amThanhKihap); banPhaoHoa('nho'); capNhatCombo();
         } else {
             nutDuocBam.style.background = "#ff4757"; phatAmThanh(amThanhLeuLeu); chuoiThang = 0; capNhatCombo();
-            soLanSaiThiDau++; let mangHTML = "";
-            for(let i=0; i< (5 - soLanSaiThiDau); i++) mangHTML += "❤️";
-            for(let i=0; i< soLanSaiThiDau; i++) mangHTML += "🖤";
+            soLanSaiThiDau++; let mangHTML = ""; for(let i=0; i< (5 - soLanSaiThiDau); i++) mangHTML += "❤️"; for(let i=0; i< soLanSaiThiDau; i++) mangHTML += "🖤";
             document.getElementById("so-mang-thi").innerText = mangHTML;
         }
 
-        setTimeout(() => { 
-            if(soLanSaiThiDau >= 5) { clearInterval(dongHoThi); tatTichTac(); ketThucThiDau(false, true); } 
-            else if(thoiGianThi > 0) chuyenCauHoiThi(); 
-        }, 800);
+        setTimeout(() => { if(soLanSaiThiDau >= 5) { clearInterval(dongHoThi); tatTichTac(); ketThucThiDau(false, true); } else if(thoiGianThi > 0) chuyenCauHoiThi(); }, 800);
     }
 
     function ketThucThiDau(hetKho = false, hetMang = false) {
-        document.getElementById("khu-vuc-combo").style.display = "none"; let textTitle = ""; let loiNhacNho = "";
-        if(!hetMang) setTimeout(() => banPhaoHoa('to'), 500);
+        if('speechSynthesis' in window) window.speechSynthesis.cancel(); // Dập âm thanh đếm ngược nếu kết thúc sớm
+        document.getElementById("khu-vuc-combo").style.display = "none"; document.getElementById("btn-su-phu").style.display = "none";
+        let textTitle = ""; let loiNhacNho = ""; if(!hetMang) setTimeout(() => banPhaoHoa('to'), 500);
 
         if(hetKho) textTitle = "BẠN ĐÃ LÀM SẠCH KHO CÂU HỎI!";
-        else if(hetMang) {
-            textTitle = "❌ DỪNG CUỘC CHƠI!";
-            loiNhacNho = `<div style="font-size: 15px; color: #e17055; margin-top: 15px; background: #ffeaa7; padding: 15px; border-radius: 10px; border: 2px dashed #fdcb6e; line-height: 1.4;">👨‍🏫 <b>Thầy nhắc nhở:</b> Em cần xem lại tài liệu và ôn luyện lý thuyết nhiều hơn nhé. Cố gắng ở lần sau nhé!</div>`;
-        } else textTitle = "⏰ HẾT GIỜ THI ĐẤU!";
+        else if(hetMang) { textTitle = "❌ DỪNG CUỘC CHƠI!"; loiNhacNho = `<div style="font-size: 15px; color: #e17055; margin-top: 15px; background: #ffeaa7; padding: 15px; border-radius: 10px; border: 2px dashed #fdcb6e; line-height: 1.4;">👨‍🏫 <b>Danh hiệu: Tiểu Đồng Quét Sân</b><br>Thầy nhắc nhở: Em cần xem lại tài liệu và ôn luyện lý thuyết nhiều hơn nhé. Cố gắng ở lần sau!</div>`; } 
+        else textTitle = "⏰ HẾT GIỜ THI ĐẤU!";
 
-        document.getElementById("cau-hoi").innerHTML = `
-            <div style="font-size: 22px; font-weight: 900; color: #ff4757; margin-bottom: 10px;">${textTitle}</div>
-            <div style="font-size: 18px; font-weight: 700;">Em đạt được tổng: <span style="color:#1e90ff; font-size:26px;">${diem}</span> Điểm</div>
-            <p style="font-style:italic; font-size: 14px; margin-bottom: 0;">(Tương đương trả lời đúng ${diem/10} câu)</p>
-            ${loiNhacNho}
-        `;
+        loiNhacNho += `<h3 style="color:#1e90ff; font-weight:900; margin-top:20px; text-transform:uppercase;">🔥 Train Hard - Fight Easy 🔥</h3>`;
+
+        document.getElementById("cau-hoi").innerHTML = `<div style="font-size: 22px; font-weight: 900; color: #ff4757; margin-bottom: 10px;">${textTitle}</div><div style="font-size: 18px; font-weight: 700;">Em đạt được tổng: <span style="color:#1e90ff; font-size:26px;">${diem}</span> Điểm</div><p style="font-style:italic; font-size: 14px; margin-bottom: 0;">(Tương đương trả lời đúng ${diem/10} câu)</p>${loiNhacNho}`;
         document.getElementById("dap-an").innerHTML = `<button class="btn-full btn-luu" onclick="luuLichSu()">💾 LƯU KẾT QUẢ & THOÁT</button>`;
     }
 
-    function layCauHoiChuaChoi() {
-        let indexCauHoi = -1;
-        for(let i = 0; i < khoDuLieu.length; i++) { if(!mangSoDaChoi.includes(i)) { indexCauHoi = i; break; } }
-        return indexCauHoi;
-    }
+    function layCauHoiChuaChoi() { let indexCauHoi = -1; for(let i = 0; i < khoDuLieu.length; i++) { if(!mangSoDaChoi.includes(i)) { indexCauHoi = i; break; } } return indexCauHoi; }
 
     function hienThiGiaoDienCauHoi(indexCau, hamXuLyKhiClick) {
         const duLieuCau = khoDuLieu[indexCau]; let noiDungHTML = "";
-        if (chuoiThang >= 3) {
-            let comboText = chuoiThang >= 5 ? "⚡ KHÔNG THỂ CẢN BƯỚC" : "🔥 ĐANG VÀO PHOM";
-            noiDungHTML += `<div style="color: #ff4757; font-weight: 900; font-size: 14px; margin-bottom: 10px; animation: pulse 0.5s infinite alternate;">Chuỗi đúng x${chuoiThang}: ${comboText}</div>`;
-        }
+        document.getElementById("cau-dang-chon").style.display = "block"; document.getElementById("cau-dang-chon").innerText = "Câu số: " + mangSoDaChoi.length;
+        if (chuoiThang >= 3) { let comboText = chuoiThang >= 5 ? "⚡ KHÔNG THỂ CẢN BƯỚC" : "🔥 ĐANG VÀO PHOM"; noiDungHTML += `<div style="color: #ff4757; font-weight: 900; font-size: 14px; margin-bottom: 10px; animation: pulse 0.5s infinite alternate;">Chuỗi đúng x${chuoiThang}: ${comboText}</div>`; }
         if (duLieuCau.hinhAnh && duLieuCau.hinhAnh.trim() !== "") noiDungHTML += `<img src="${duLieuCau.hinhAnh}" class="question-img">`;
         noiDungHTML += `<div>${duLieuCau.cauHoi}</div>`; document.getElementById("cau-hoi").innerHTML = noiDungHTML;
         
         const khuVucDapAn = document.getElementById("dap-an"); khuVucDapAn.innerHTML = "";
         let danhSachDapAnTam = duLieuCau.cacDapAn.map((dapAn, index) => { return { noiDung: dapAn, laDapAnDung: (index === duLieuCau.dapAnDung) }; });
-
         let danhSachDapAnDaXao = xaoTronMang(danhSachDapAnTam);
         danhSachDapAnDaXao.forEach((dapAnHienTai) => {
             const nut = document.createElement("button"); nut.className = "ans-btn"; nut.innerText = dapAnHienTai.noiDung;
-            nut.onclick = function() { hamXuLyKhiClick(dapAnHienTai.laDapAnDung, this); }; khuVucDapAn.appendChild(nut);
+            nut.dataset.dung = dapAnHienTai.laDapAnDung; nut.onclick = function() { hamXuLyKhiClick(dapAnHienTai.laDapAnDung, this); }; khuVucDapAn.appendChild(nut);
         });
     }
 
-    // --- HÀM LƯU KẾT QUẢ CHỦ ĐỘNG (BẤM NÚT) ---
     function luuLichSu() {
-        if (daXuLyKetQua) return; // NẾU CHỐT ĐÃ KHÓA THÌ KHÔNG CHO GỬI NỮA
-        if(diem === 0 && soLanSaiThiDau === 0) { alert("Em chưa ghi được điểm nào cả!"); return; }
-        
-        daXuLyKetQua = true; // KHÓA CHỐT NGAY LẬP TỨC KHI BẮT ĐẦU GỬI
-        
+        if (daXuLyKetQua) return; if(diem === 0 && soLanSaiThiDau === 0) { alert("Em chưa ghi được điểm nào cả!"); return; }
+        daXuLyKetQua = true; 
         let urlLuu = API_URL + "?action=luuDiem&ten=" + encodeURIComponent(tenNguoiDung + " [" + cheDoHienTai + "]") + "&diem=" + diem;
-        let cacNutLuu = document.querySelectorAll(".btn-luu");
-        cacNutLuu.forEach(n => { n.innerText = "⏳ ĐANG LƯU DỮ LIỆU..."; n.disabled = true; });
-
-        fetch(urlLuu).then(response => response.text()).then(data => {
-            alert(`🏆 Đã lưu thành tích ${cheDoHienTai} thành công!`); location.reload(); 
-        }).catch(error => {
-            alert("Lỗi mạng! Chưa thể lưu điểm.");
-            daXuLyKetQua = false; // NẾU LỖI MẠNG THÌ MỞ KHÓA CHO HỌ LƯU LẠI
-            cacNutLuu.forEach(n => { n.innerText = "💾 LƯU KẾT QUẢ & THOÁT"; n.disabled = false; });
-        });
+        let cacNutLuu = document.querySelectorAll(".btn-luu"); cacNutLuu.forEach(n => { n.innerText = "⏳ ĐANG LƯU DỮ LIỆU..."; n.disabled = true; });
+        fetch(urlLuu).then(response => response.text()).then(data => { alert(`🏆 Đã lưu thành tích ${cheDoHienTai} thành công!`); location.reload(); }).catch(error => { alert("Lỗi mạng! Chưa thể lưu điểm."); daXuLyKetQua = false; cacNutLuu.forEach(n => { n.innerText = "💾 LƯU KẾT QUẢ & THOÁT"; n.disabled = false; }); });
     }
 
-    // =========================================================================
-    // BỘ PHẬN GIÁM THỊ NGẦM (Lưu điểm âm thầm, chờ quay lại mới xử phạt)
-    // =========================================================================
-
-    // 1. Theo dõi hành vi Đổi Tab / Thu nhỏ màn hình
     document.addEventListener("visibilitychange", function() {
-        if (document.visibilityState === 'hidden') {
-            xuLyKhiGiauTrang();
-        } else if (document.visibilityState === 'visible' && daXuLyKetQua) {
+        if (document.visibilityState === 'hidden') { xuLyKhiGiauTrang(); } 
+        else if (document.visibilityState === 'visible' && daXuLyKetQua) {
             let scoreBoxHTML = document.getElementById("cau-hoi").innerHTML;
             if (scoreBoxHTML.includes("HỦY KẾT QUẢ") || scoreBoxHTML.includes("BẮT ĐẦU CHỊU PHẠT") || cheDoHienTai === "Thi Đấu") {
-                setTimeout(() => {
-                    alert("Bạn đã bị bắt! 🚨 tính nhắn tin cho ai hay định hỏi 'chị Google' thế?. Khó quá thì chạy tìm người thân trợ giúp và dồn 200% công lực vào bài làm, không được gian lận nhé!❤️❤️❤️\t");
-                    location.reload(); 
-                }, 300);
+                setTimeout(() => { alert("Bạn đã bị bắt! 🚨 tính nhắn tin cho ai hay định hỏi 'chị Google' thế?. Khó quá thì chạy tìm người thân trợ giúp và dồn 200% công lực vào bài làm, không được gian lận nhé!❤️❤️❤️"); location.reload(); }, 300);
             }
         }
     });
 
-    // 2. Theo dõi hành vi Tắt trang / Bấm nút Back
-    window.addEventListener("pagehide", function(event) {
-        xuLyKhiGiauTrang();
-    });
+    window.addEventListener("pagehide", function(event) { xuLyKhiGiauTrang(); });
 
-    // --- HÀM HỦY HOẶC THOÁT NGANG ÂM THẦM ---
     function xuLyKhiGiauTrang() {
         if (tenNguoiDung && tenNguoiDung !== "" && diem > 0 && !daXuLyKetQua) {
-            daXuLyKetQua = true; // KHÓA CHỐT LẠI LUÔN ĐỂ KHÔNG BỊ TRÙNG LẶP DỮ LIỆU
-            
+            daXuLyKetQua = true; 
             var tenBaoCao = tenNguoiDung + " (" + cheDoHienTai + " - Hủy Kết Quả)";
             var linkGuiDiem = API_URL + "?action=luuDiem&ten=" + encodeURIComponent(tenBaoCao) + "&diem=" + diem;
-            
             fetch(linkGuiDiem, { method: 'GET', keepalive: true }).catch(err => console.log(err));
-
-            clearInterval(dongHoLT); 
-            clearInterval(dongHoThi); 
-            tatTichTac();
+            clearInterval(dongHoLT); clearInterval(dongHoThi); tatTichTac();
+            if('speechSynthesis' in window) window.speechSynthesis.cancel();
         }
     }
 </script>
